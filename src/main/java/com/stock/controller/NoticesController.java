@@ -104,12 +104,12 @@ public class NoticesController {
 	//공지사항 댓글 등록
 //	@ResponseBody
 	@RequestMapping(value ="/reply", produces = MediaType.APPLICATION_JSON_UTF8_VALUE , consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<String> reply(@RequestBody NoticesReplyVo vo) {
+	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo) {
 		
 		log.info("데이터 넘왔나--" + vo);
 		service.noticesReply(vo);
 		
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<NoticesReplyVo>(vo,HttpStatus.OK);
 	}
 	
 	

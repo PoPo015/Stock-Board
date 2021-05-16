@@ -359,7 +359,7 @@
             <!-- /.navbar-static-side -->
         </nav>
 
-        <div id="page-wrapper">
+        <div id="page-wrapper" >
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">공지사항 상세보기</h1>
@@ -436,8 +436,6 @@
 				  </div>
 				
 			</div>
-
-																																														
 		<!-- 부트스트랩 상세보기 -->
                     </div>
                 </div>
@@ -446,25 +444,33 @@
             <!-- /.row -->
             
             
-
+            <!-- 댓글목록 -->
+            <div class="row">
+				<div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+							<div class="panel panel-success">
+							
+							<!-- 동적태그 추가  -->
+								<div class="panel-heading clearfix">
+									
+									<div id="replyList">
+									
+									</div>
+									
+								</div>
+							<!-- 동적태그 추가 end  -->	
+								
+							</div>
+                    </div>
+                </div>
+            </div>
+		</div>
+        	<!-- 댓글목록 -->    
         </div>
         <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
-    
-	<!-- common.jsp파일로 사용 -->
-<!--     jQuery -->
-<%--     <script src="${pageContext.request.contextPath}/resources/vendor/jquery/jquery.min.js"></script> --%>
-
-<!--     Bootstrap Core JavaScript -->
-<%--     <script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/js/bootstrap.min.js"></script> --%>
-
-<!--     Custom Theme JavaScript -->
-<%--     <script src="${pageContext.request.contextPath}/resources/dist/js/sb-admin-2.js"></script> --%>
-
-<!--     Metis Menu Plugin JavaScript -->
-<%--     <script src="${pageContext.request.contextPath}/resources/vendor/metisMenu/metisMenu.min.js"></script> --%>
 
 <script>
 
@@ -486,23 +492,31 @@
 	});
 
 	$("#replyReg").click(function(){
-		console.log($("#reply").val());
 		
+	let replyChg;
+	
 		$.ajax({
 			url: "/notices/reply",
 			type: "post",
-			dataType: "text",
+			dataType: "text",							//서버로부터  반환을 text형식으로 받겠다
 			contentType: "application/json; charset=utf-8",
-			data: JSON.stringify ({
+			data: JSON.stringify ({						//자바에는 json타입이 없으니 String 객체로 변환후 서버로 전송
 				"bno" : ${details.bno},
 				"reply" : $("#reply").val(),
 				"replyer" : "테스트계정으로 넣는다."
 			}),
 			success: function(data){
-				console.log("성공");
+				$("#reply").val('');					//댓글 등록후, 등록 칸 지움
+				let replyList = JSON.parse(data);		//서버 String 타입의 vo객체를 object형식으로 변환
+				console.log("댓글등록성공" + replyList.reply);
+				
+				replyChg = "<div id='replyHeader'><i>" + replyList.replyer + replyList.regTime + "</i></div>"
+				replyChg += "<div id='replyBody'><i>" + replyList.reply +  "</i></div>"
+				
+				$("#replyList").append(replyChg);//댓글 등록후 등록된 요소추가
 			},
 			error: function (request, status, error){
-				console.log("실패");
+				console.log("댓글등록실패");
 			}
 		});
 

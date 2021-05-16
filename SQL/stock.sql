@@ -131,4 +131,20 @@ values (seq_notices.nextval,'테스트','테스트','테스트')
 
 
 	 	SELECT COUNT(*) FROM NOTICES WHERE title LIKE '제목'
+----공지사항 댓글----
+create table noticesreply(
+rno number(10) not null,
+bno number(10) not null,
+reply varchar2(500),
+replyer varchar2(500),
+regTime date default sysdate,
+updateTime date
+)
+CREATE SEQUENCE seq_noticesReply INCREMENT BY 1 START WITH 1 -- 시퀀스 생성
+ALTER TABLE noticesreply ADD CONSTRAINT pk_noticesReply PRIMARY KEY (rno)
+ALTER TABLE noticesreply ADD CONSTRAINTS fk_noticesReply FOREIGN KEY (bno) REFERENCES notices(bno)
+
+
+insert into noticesreply(rno, bno, reply, replyer)
+values (1,194,'댓글내용','댓글작성자')
         
