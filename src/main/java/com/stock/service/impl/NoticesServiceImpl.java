@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.mapper.NoticesMapper;
 import com.stock.service.NoticesService;
@@ -92,14 +93,14 @@ public class NoticesServiceImpl implements NoticesService {
 	}
 
 	@Override
-	public int serachTotal(Criteria cri) {
-		return mapper.serachTotal(cri);
+	public void noticesReply(NoticesReplyVo vo) {
+
+		log.info("서비스 댓글vo---" + vo);
+		
+		mapper.noticesReply(vo);
+		
 	}
 
-	@Override
-	public int totalCount() {
-		return mapper.totalCount();
-	}
 
 
 }

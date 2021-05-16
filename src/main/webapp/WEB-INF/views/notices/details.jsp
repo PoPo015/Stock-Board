@@ -377,17 +377,18 @@
 									<span> 
 									<a href="#"><c:out value="${details.writer}" /></a>
 									
-									<i class="fa fa-eye right">
-									<c:out value="${details.viewsCount}" />
-									</i>&nbsp; 
+										<i class="fa fa-eye right">
+										<c:out value="${details.viewsCount}" />
+										</i>&nbsp; 
 									
-									<i class="fa fa-comment right"> 
-									<c:out value="${details.replyCount}" />&nbsp;
-									</i>
-									<i class="right">
-									#<c:out value="${details.bno}" />&nbsp;
-									</i>
-									
+										<i class="fa fa-comment right"> 
+										<c:out value="${details.replyCount}" />&nbsp;
+										</i>
+										
+										<span class="right">
+										#<c:out value="${details.bno}" />&nbsp;
+										</span>
+										
 									</span> 
 									<br>
 									<span><fmt:formatDate value="${details.regTime}" pattern="yyyy-MM-dd KK:mm:ss" /></span>
@@ -397,20 +398,20 @@
 								</div>
 								
 								<div class="content-container clearfix">
-									<div class="content-function-cog share-btn-wrapper" style="border-bottom: 1px solid black">
+									<div class="content-function-cog share-btn-wrapper" style="border-bottom: 1px solid gray">
 										<h3>
 											&nbsp;&nbsp;&nbsp;
 											<c:out value="${details.title}" />
 										</h3>
 									</div>
 
-									<div class="col-xs-11" style="border-right: 1px solid black">
+									<div class="col-xs-11">
 										<h4>
 											<c:out value="${details.content}" />
 										</h4>
 									</div>
 
-									<div class="col-xs-1" style="text-align: center">
+									<div class="col-xs-1" style="text-align:center; height: 50%;border-left: 1px solid gray">
 										<!--수정삭제 -->
 										<div class="btn-group content-function-group">
 											<a class="glyphicon glyphicon-cog" data-toggle="dropdown" href="#"></a>
@@ -423,10 +424,20 @@
 									</div>
 
 								</div>
-								<div></div>
-
 							</div>
+							
+							<!-- 댓글 -->
+			<div class="panel panel-default">
+			  <div class="panel-heading">댓글</div>
+			 
+				  <div class="panel-body">
+					<textarea rows="3" style="width:90%" placeholder="댓글 쓰기" id="reply"></textarea>
+					<button type="button" id="replyReg">등록</button>
+				  </div>
+				
+			</div>
 
+																																														
 		<!-- 부트스트랩 상세보기 -->
                     </div>
                 </div>
@@ -474,6 +485,32 @@
 		}
 	});
 
+	$("#replyReg").click(function(){
+		console.log($("#reply").val());
+		
+		$.ajax({
+			url: "/notices/reply",
+			type: "post",
+			dataType: "text",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify ({
+				"bno" : ${details.bno},
+				"reply" : $("#reply").val(),
+				"replyer" : "테스트계정으로 넣는다."
+			}),
+			success: function(data){
+				console.log("성공");
+			},
+			error: function (request, status, error){
+				console.log("실패");
+			}
+		});
+
+		
+		
+	})
+	
+	
 	
 </script>
 

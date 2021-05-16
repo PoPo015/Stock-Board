@@ -34,20 +34,20 @@
 	WHERE BNO = #{bno}
 	</update>
 	
-	
-	
+	<!-- 일반 공지사항 list 페이징처리 -->	
 	<select id="getList" resultType="com.stock.domain.NoticesVo">
 	<![CDATA[
 	    SELECT * FROM 
 		 (
-		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT, (SELECT COUNT(*) FROM NOTICES) AS total
+		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT
+		 ,(SELECT COUNT(*) FROM NOTICES) AS total
 		 FROM NOTICES NOTICES
 		 WHERE BNO > 0 AND ROWNUM > 0 AND ROWNUM <= #{pageNum} * #{amount}
 		 )
 		WHERE RN > (#{pageNum} - 1) * #{amount}
 	 ]]>
 	</select>
-	<!-- 페이징 처리에서 (select count(*) from tbl_reply reply where reply.bno = board.bno) as replycnt 이쿼리 써서 댓글 개수구해야함 viewsCount 옆에추가 -->	
+	<!-- 페이징 처리에서 (select count(*) from tbl_reply reply where reply.bno = board.bno) as replyCount 이쿼리 써서 댓글 개수구해야함 viewsCount 옆에추가 -->	
 
 	<!-- 검색 페이징처리 -->
 	<select id="serach" resultType="com.stock.domain.NoticesVo">
@@ -61,15 +61,11 @@
 	WHERE RN > (#{pageNum} - 1) * #{amount}
 	]]>
 	</select>
-	
-	<!-- 검색 총개수 -->
-	<!-- <select id="serachTotal" resultType="int"> -->
-	<!-- SELECT COUNT(*) FROM NOTICES WHERE ${type} LIKE '%'||#{keyword}||'%' -->
-	<!-- </select> -->
-	
-	<!-- 게시물 총 개수 -->
-	<!-- <select id="totalCount" resultType="int"> -->
-	<!-- SELECT COUNT(*) FROM NOTICES -->
-	<!-- </select> -->
+
+	<insert id="noticesReply" parameterType="com.stock.domain.NoticesReplyVo">
+	INSERT INTO NOTICESREPLY(RNO, BNO, REPLY, REPLYER)
+	VALUES (SEQ_NOTICESREPLY.NEXTVAL, #{bno}, #{reply}, #{replyer})
+	</insert>
+
 	
 </mapper>

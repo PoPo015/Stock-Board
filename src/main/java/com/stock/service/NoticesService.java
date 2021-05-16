@@ -2,6 +2,7 @@ package com.stock.service;
 
 import java.util.List;
 
+import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.util.Criteria;
 
@@ -28,9 +29,8 @@ public interface NoticesService {
 	//검색 페이징list
 	public List<NoticesVo> serach(Criteria cri);
 	
-	//검색총개수
-	public int serachTotal(Criteria cri);
+	//댓글 등록
+	public void noticesReply(NoticesReplyVo vo);
 	
-	//게시물 총개수
-	public int totalCount();
+	
 }

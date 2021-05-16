@@ -1,13 +1,19 @@
 package com.stock.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.service.NoticesService;
 import com.stock.util.Criteria;
@@ -95,6 +101,16 @@ public class NoticesController {
 		return "redirect:/notices/list";
 	}
 	
+	//공지사항 댓글 등록
+//	@ResponseBody
+	@RequestMapping(value ="/reply", produces = MediaType.APPLICATION_JSON_UTF8_VALUE , consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<String> reply(@RequestBody NoticesReplyVo vo) {
+		
+		log.info("데이터 넘왔나--" + vo);
+		service.noticesReply(vo);
+		
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
 	
 	
 }
