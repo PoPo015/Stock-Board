@@ -61,11 +61,15 @@
 	WHERE RN > (#{pageNum} - 1) * #{amount}
 	]]>
 	</select>
-
+	
+	<!-- 댓글 등록-->
 	<insert id="noticesReply" parameterType="com.stock.domain.NoticesReplyVo">
 	INSERT INTO NOTICESREPLY(RNO, BNO, REPLY, REPLYER)
 	VALUES (SEQ_NOTICESREPLY.NEXTVAL, #{bno}, #{reply}, #{replyer})
 	</insert>
 
+	<select id="noticesReplyList" parameterType="int" resultType="com.stock.domain.NoticesReplyVo">
+	SELECT /*+ INDEX(NOTICESREPLY PK_NOTICESREPLY) */ * FROM NOTICESREPLY WHERE BNO =#{bno}   
+	</select>
 	
 </mapper>

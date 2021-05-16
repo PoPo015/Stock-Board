@@ -472,6 +472,58 @@
     </div>
     <!-- /#wrapper -->
 
+
+<script>
+//동적태그 추가시 버튼 동작안할떄
+$(document).on(function() {
+
+});
+
+var app = (function() {  
+	
+	
+	$.ajax({
+		url: "/notices/replyList/${details.bno}",
+		type: "get",
+		dataType: "text",						//서버로부터  반환을 text형식으로 받겠다
+		contentType: "application/json; charset=utf-8",
+		success: function(data){
+			let replygetList ="";
+			let replyList = JSON.parse(data);	//서버에서 String타입 데이터를 json타입으로 변경해서 끄내씀
+			console.log("즉시실행함수 성공");
+			console.log(replyList);
+			console.log(replyList.length);
+
+			//서버에서 반환된 객체수만큼 반복문으로 동적코드 추가
+			for(let i in replyList){
+				console.log(replyList[i].rno);
+				
+				replygetList += "<div style='border: solid 1px'><div id='replyHeader'>" + replyList[i].replyer + "</div>"
+				replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
+				replygetList += "<div id='replyBody'>" + replyList[i].reply 
+				replygetList += "<div class='btn-group content-function-group'>"     				
+				replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
+				replygetList += "<ul class='dropdown-menu dropdown-user'>"
+				replygetList += "<li><a onclick='test1("+replyList[i].rno+")' data-replyId="+replyList[i].rno+">"
+				replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+				replygetList +=	"<li><a onclick='test2(this)'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+				replygetList += "</ul></div>"
+				replygetList += "</div></div>"
+				
+			}
+			
+			$("#replyList").html(replygetList);
+		},
+		error: function (request, status, error){
+			console.log("즉시실행함수 실패");
+		}
+	});
+	
+	
+}());
+</script>
+
+
 <script>
 
 	//수정버튼클릭
@@ -503,30 +555,50 @@
 			data: JSON.stringify ({						//자바에는 json타입이 없으니 String 객체로 변환후 서버로 전송
 				"bno" : ${details.bno},
 				"reply" : $("#reply").val(),
-				"replyer" : "테스트계정으로 넣는다."
+				"replyer" : "테스트계정"
 			}),
 			success: function(data){
 				$("#reply").val('');					//댓글 등록후, 등록 칸 지움
 				let replyList = JSON.parse(data);		//서버 String 타입의 vo객체를 object형식으로 변환
 				console.log("댓글등록성공" + replyList.reply);
 				
-				replyChg = "<div id='replyHeader'><i>" + replyList.replyer + replyList.regTime + "</i></div>"
-				replyChg += "<div id='replyBody'><i>" + replyList.reply +  "</i></div>"
+				replyChg = "<div style='border: solid 1px'><div id='replyHeader'>" + replyList.replyer + "</div>"
+				replyChg += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList.regTime)+")</div>"
+				replyChg += "<div id='replyBody'>" + replyList.reply 
+				replyChg += "<div class='btn-group content-function-group'>"     				
+				replyChg += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
+				replyChg += "<ul class='dropdown-menu dropdown-user'>"
+				replyChg += "<li><a onclick='test1()'><i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+				replyChg +=	"<li><a onclick='test2()'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+				replyChg += "</ul></div>"
+				replyChg += "</div></div>"
+				
 				
 				$("#replyList").append(replyChg);//댓글 등록후 등록된 요소추가
+				
 			},
 			error: function (request, status, error){
 				console.log("댓글등록실패");
 			}
 		});
-
-		
-		
 	})
 	
+	//날짜포맷 라이브러리를 이용한 js 날짜 포맷함수
+	function timeFormat(time) {
+		return moment(time).format('YYYY-MM-DD HH:mm:ss');
+	}
 	
+	function test1(aa){
+		console.log("수정 눌르다");
+		console.log(aa);
+	}
+	
+	function test2(){
+		console.log("삭제 눌르다2");
+	}
 	
 </script>
+
 
 
 

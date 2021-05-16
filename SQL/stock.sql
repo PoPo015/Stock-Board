@@ -148,3 +148,4 @@ ALTER TABLE noticesreply ADD CONSTRAINTS fk_noticesReply FOREIGN KEY (bno) REFER
 insert into noticesreply(rno, bno, reply, replyer)
 values (1,194,'´ñ±Û³»¿ë','´ñ±ÛÀÛ¼ºÀÚ')
         
+select /*+ index(noticesreply pk_noticesReply) */ * from noticesreply where bno =294      --´ñ±Û¸ñ·Ï

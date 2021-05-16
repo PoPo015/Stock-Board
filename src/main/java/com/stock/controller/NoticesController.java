@@ -1,5 +1,8 @@
 package com.stock.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -102,15 +105,25 @@ public class NoticesController {
 	}
 	
 	//공지사항 댓글 등록
-//	@ResponseBody
-	@RequestMapping(value ="/reply", produces = MediaType.APPLICATION_JSON_UTF8_VALUE , consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value ="/reply", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo) {
 		
-		log.info("데이터 넘왔나--" + vo);
+		vo.setRegTime(new Date());
+		
+		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);
 		
 		return new ResponseEntity<NoticesReplyVo>(vo,HttpStatus.OK);
 	}
 	
-	
+	@ResponseBody
+	@RequestMapping(value="/replyList/{bno}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<NoticesReplyVo> replyList(@PathVariable("bno")int bno) {
+		
+		log.info("댓글 목록 실행함수----" + bno);
+		service.noticesReplyList(bno);
+		
+		return 	service.noticesReplyList(bno);
+		
+	}
 }

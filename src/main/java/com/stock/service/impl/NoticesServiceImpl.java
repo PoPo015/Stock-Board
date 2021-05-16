@@ -101,6 +101,14 @@ public class NoticesServiceImpl implements NoticesService {
 		
 	}
 
+	@Override
+	public List<NoticesReplyVo> noticesReplyList(int bno) {
+
+		log.info("댓글목록--" + mapper.noticesReplyList(bno));
+		
+		return mapper.noticesReplyList(bno);
+	}
+
 
 
 }

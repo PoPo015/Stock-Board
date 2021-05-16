@@ -31,4 +31,7 @@ public interface NoticesMapper {
 
 	//댓글 등록
 	public void noticesReply(NoticesReplyVo vo);
+
+	//댓글 리스트
+	public List<NoticesReplyVo> noticesReplyList(int bno);
 }
