@@ -358,8 +358,7 @@
                             <div class="table-responsive">
                                 <div class="table table-bordered table-striped">
 
-									<form action="register" method="post"
-										style="text-align: center" id="frm">
+									<form action="/notices/register" method="post" style="text-align: center" id="frm">
 										<br>
 
 										<div>
@@ -376,7 +375,7 @@
 										<input type="hidden" name="writer" value="관리자">
 
 										<div style="float: right">
-											<button type="button" class="btn btn-success"
+											<button type="button" class="btn btn-suwccess"
 												onclick="registerClick()">등록</button>
 											<button type="button" class="btn btn-default"
 												onclick="location.href='list'">취소</button>

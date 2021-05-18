@@ -62,14 +62,30 @@
 	]]>
 	</select>
 	
-	<!-- 댓글 등록-->
+	<!-- 댓글 등록 selectkey로 시퀀스값을 저장해서 리턴해줌.-->
 	<insert id="noticesReply" parameterType="com.stock.domain.NoticesReplyVo">
-	INSERT INTO NOTICESREPLY(RNO, BNO, REPLY, REPLYER)
-	VALUES (SEQ_NOTICESREPLY.NEXTVAL, #{bno}, #{reply}, #{replyer})
+		<selectKey resultType="int" keyProperty="rno" order="BEFORE">
+		SELECT SEQ_NOTICESREPLY.NEXTVAL AS rno FROM DUAL
+		</selectKey>
+	
+		INSERT INTO NOTICESREPLY(RNO, BNO, REPLY, REPLYER)
+		VALUES (#{rno}, #{bno}, #{reply}, #{replyer})
 	</insert>
-
+	
+	<!-- 공지사항댓글 목록 -->
 	<select id="noticesReplyList" parameterType="int" resultType="com.stock.domain.NoticesReplyVo">
 	SELECT /*+ INDEX(NOTICESREPLY PK_NOTICESREPLY) */ * FROM NOTICESREPLY WHERE BNO =#{bno}   
 	</select>
+	
+	<!-- 공지사항 업데이트 -->
+	<update id="noticesReplyModify" parameterType="com.stock.domain.NoticesReplyVo">
+	UPDATE NOTICESREPLY SET
+	REPLY = #{reply} WHERE RNO = #{rno}
+	</update>
+	
+	<delete id="noticesReplyDelete" parameterType="int">
+	DELETE FROM NOTICESREPLY
+	WHERE RNO =#{rno}
+	</delete>
 	
 </mapper>

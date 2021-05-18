@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.stock.domain.NoticesReplyVo;
@@ -105,25 +106,50 @@ public class NoticesController {
 	}
 	
 	//공지사항 댓글 등록
-	@RequestMapping(value ="/reply", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value ="/reply", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo) {
 		
-		vo.setRegTime(new Date());
+
 		
 		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);
 		
+		log.info(service.noticesReply(vo));
+		
 		return new ResponseEntity<NoticesReplyVo>(vo,HttpStatus.OK);
 	}
 	
+	//공지사항 댓글 목록 로드
 	@ResponseBody
-	@RequestMapping(value="/replyList/{bno}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value="/replyList/{bno}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<NoticesReplyVo> replyList(@PathVariable("bno")int bno) {
 		
 		log.info("댓글 목록 실행함수----" + bno);
 		service.noticesReplyList(bno);
 		
 		return 	service.noticesReplyList(bno);
+	}
+	
+	//공지사항 댓글 수정
+	@ResponseBody
+	@PostMapping(value="/replyModify")
+	public void replyModify(@RequestBody NoticesReplyVo vo) {
+		
+		log.info("댓글수정 vo---" + vo);
+		
+		service.noticesReplyModify(vo);
 		
 	}
+	
+	//공지사항 댓글삭제
+	@ResponseBody
+	@PostMapping(value="/replyDelete/{rno}")
+	public void replyDelete(@PathVariable("rno") int rno) {
+		
+		log.info("rno----" + rno);
+		
+		service.noticesReplyDelete(rno);
+	
+	}
+
 }

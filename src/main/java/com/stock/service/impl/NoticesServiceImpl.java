@@ -1,5 +1,6 @@
 package com.stock.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,20 +94,35 @@ public class NoticesServiceImpl implements NoticesService {
 	}
 
 	@Override
-	public void noticesReply(NoticesReplyVo vo) {
+	public NoticesReplyVo noticesReply(NoticesReplyVo vo) {
 
-		log.info("서비스 댓글vo---" + vo);
-		
 		mapper.noticesReply(vo);
+		vo.setRegTime(new Date());
+		vo.setRno(vo.getRno());
 		
+		return vo;
 	}
 
+	
 	@Override
 	public List<NoticesReplyVo> noticesReplyList(int bno) {
 
 		log.info("댓글목록--" + mapper.noticesReplyList(bno));
 		
 		return mapper.noticesReplyList(bno);
+	}
+
+	@Override
+	public void noticesReplyModify(NoticesReplyVo vo) {
+
+		mapper.noticesReplyModify(vo);
+	}
+
+	@Override
+	public void noticesReplyDelete(int rno) {
+
+		mapper.noticesReplyDelete(rno);
+
 	}
 
 

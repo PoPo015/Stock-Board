@@ -449,19 +449,16 @@
 				<div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-							<div class="panel panel-success">
-							
+                        
 							<!-- 동적태그 추가  -->
+							<div class="panel panel-info">
 								<div class="panel-heading clearfix">
-									
 									<div id="replyList">
 									
 									</div>
-									
 								</div>
-							<!-- 동적태그 추가 end  -->	
-								
 							</div>
+							<!-- 동적태그 추가 end  -->	
                     </div>
                 </div>
             </div>
@@ -474,57 +471,51 @@
 
 
 <script>
-//동적태그 추가시 버튼 동작안할떄
-$(document).on(function() {
 
-});
-
-var app = (function() {  
+	//즉시 실행함수로, 댓글목록을 불러옴
+	var reply = function() {  
+		
+		$.ajax({
+			url: "/notices/replyList/${details.bno}",
+			type: "get",
+			dataType: "text",						//서버로부터  반환을 text형식으로 받겠다
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				let replygetList ="";
+				let replyList = JSON.parse(data);	//서버에서 String타입 데이터를 json타입으로 변경해서 끄내씀
+				console.log("즉시실행함수 성공");
+				console.log(replyList);
+				console.log(replyList.length);
 	
-	
-	$.ajax({
-		url: "/notices/replyList/${details.bno}",
-		type: "get",
-		dataType: "text",						//서버로부터  반환을 text형식으로 받겠다
-		contentType: "application/json; charset=utf-8",
-		success: function(data){
-			let replygetList ="";
-			let replyList = JSON.parse(data);	//서버에서 String타입 데이터를 json타입으로 변경해서 끄내씀
-			console.log("즉시실행함수 성공");
-			console.log(replyList);
-			console.log(replyList.length);
-
-			//서버에서 반환된 객체수만큼 반복문으로 동적코드 추가
-			for(let i in replyList){
-				console.log(replyList[i].rno);
+				//서버에서 반환된 객체수만큼 반복문으로 동적코드 추가
+				for(let i in replyList){
+	// 				console.log(replyList[i].rno);
+					let encodeReply = encodeURI(replyList[i].reply);
+	// 				console.log(dataa);
+					
+					
+					replygetList += "<div style='border: solid 1px' data-replyId="+replyList[i].rno+">"
+					replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
+					replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
+					replygetList += "<div id='replyBody'>" + replyList[i].reply 
+					replygetList += "<div class='btn-group content-function-group col-lg-6' style='float:right'>"     				
+					replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
+					replygetList += "<ul class='dropdown-menu dropdown-user'>"
+					replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
+					replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+					replygetList +=	"<li><a onclick='replyDelete("+replyList[i].rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+					replygetList += "</ul></div>"
+					replygetList += "</div></div>"
+				}
 				
-				replygetList += "<div style='border: solid 1px'><div id='replyHeader'>" + replyList[i].replyer + "</div>"
-				replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
-				replygetList += "<div id='replyBody'>" + replyList[i].reply 
-				replygetList += "<div class='btn-group content-function-group'>"     				
-				replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
-				replygetList += "<ul class='dropdown-menu dropdown-user'>"
-				replygetList += "<li><a onclick='test1("+replyList[i].rno+")' data-replyId="+replyList[i].rno+">"
-				replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
-				replygetList +=	"<li><a onclick='test2(this)'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
-				replygetList += "</ul></div>"
-				replygetList += "</div></div>"
-				
+				$("#replyList").html(replygetList);
+			},
+			error: function (request, status, error){
+				console.log("즉시실행함수 실패");
 			}
-			
-			$("#replyList").html(replygetList);
-		},
-		error: function (request, status, error){
-			console.log("즉시실행함수 실패");
-		}
-	});
-	
-	
-}());
-</script>
-
-
-<script>
+		});
+	};
+	reply();
 
 	//수정버튼클릭
 	$("#modified").click(function(){
@@ -543,9 +534,10 @@ var app = (function() {
 		}
 	});
 
+	//댓글 등록버튼 클릭
 	$("#replyReg").click(function(){
 		
-	let replyChg;
+	let replyChg ="";
 	
 		$.ajax({
 			url: "/notices/reply",
@@ -561,15 +553,20 @@ var app = (function() {
 				$("#reply").val('');					//댓글 등록후, 등록 칸 지움
 				let replyList = JSON.parse(data);		//서버 String 타입의 vo객체를 object형식으로 변환
 				console.log("댓글등록성공" + replyList.reply);
+				let encodeReply = encodeURI(replyList.reply);
 				
-				replyChg = "<div style='border: solid 1px'><div id='replyHeader'>" + replyList.replyer + "</div>"
+				
+				
+				replyChg += "<div style='border: solid 1px' data-replyId=" +replyList.rno+ ">"
+				replyChg += "<div id='replyHeader'>" + replyList.replyer + "</div>"
 				replyChg += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList.regTime)+")</div>"
 				replyChg += "<div id='replyBody'>" + replyList.reply 
-				replyChg += "<div class='btn-group content-function-group'>"     				
+				replyChg += "<div class='btn-group content-function-group col-lg-6' style='float:right'>"     				
 				replyChg += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
 				replyChg += "<ul class='dropdown-menu dropdown-user'>"
-				replyChg += "<li><a onclick='test1()'><i class='glyphicon glyphicon-edit'></i>수정</a></li>"
-				replyChg +=	"<li><a onclick='test2()'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+				replyChg += "<li><a onclick='replyModify("+replyList.rno+",`"+encodeReply+"`)' data-replyId="+replyList.rno+">"
+				replyChg += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+				replyChg +=	"<li><a onclick='replyDelete("+replyList.rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
 				replyChg += "</ul></div>"
 				replyChg += "</div></div>"
 				
@@ -588,18 +585,77 @@ var app = (function() {
 		return moment(time).format('YYYY-MM-DD HH:mm:ss');
 	}
 	
-	function test1(aa){
-		console.log("수정 눌르다");
-		console.log(aa);
+	//댓글수정 
+	function replyModify(rno, reply){
+		console.log("rno--" + rno);
+		console.log("reply--" + decodeURI(reply));
+		
+		let getreply = decodeURI(reply);
+		let replyChg ="";
+		
+		replyChg += "<textarea rows='3' cols='90' name='reply' id='replyChg"+rno+"'>"+ getreply +"</textarea>"
+		replyChg += "<button onclick='replyModifyAjax("+rno+")'>수정</button><button onclick='reply()'>취소</button>"
+				
+		$("div[data-replyid="+rno+"]").html(replyChg);
+				
+	}
+	//댓글수정 ajax
+	function replyModifyAjax(rno){
+		
+		$.ajax({
+			url: "/notices/replyModify",
+			type: "post",
+			dataType: "text",							//서버로부터  반환을 text형식으로 받겠다
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify ({						//자바에는 json타입이 없으니 String 객체로 변환후 서버로 전송
+				"rno" : rno,
+				"reply" : $("#replyChg"+rno+"").val()
+			}),
+			success: function(data){
+				console.log("댓글 수정 성공");
+				reply();
+			},
+			error: function (request, status, error){
+				console.log("댓글 수정 실패");
+			}
+		})	
+	};
+	
+	function replyDelete(rno){
+		console.log("삭제 눌르다" + rno);
+		
+		if(confirm("정말 삭제하시겠습니까?") == true){
+		
+			$.ajax({
+				url: "/notices/replyDelete/"+rno+"",
+				type: "post",
+				success: function(data){
+					console.log("댓글 삭제 성공");
+					reply();
+				},
+				error: function (request, status, error){
+					console.log("댓글 삭제 실패");
+				}
+			})	
+			
+		}else{
+			return;
+		}
+		
 	}
 	
-	function test2(){
-		console.log("삭제 눌르다2");
-	}
 	
 </script>
 
 
+<script>
+//동적태그 추가시 버튼 동작안할떄
+$(document).on(function() {
+
+	
+});
+
+</script> 
 
 
 </body>

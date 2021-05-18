@@ -30,9 +30,14 @@ public interface NoticesService {
 	public List<NoticesVo> serach(Criteria cri);
 	
 	//댓글 등록
-	public void noticesReply(NoticesReplyVo vo);
+	public NoticesReplyVo noticesReply(NoticesReplyVo vo);
 	
 	//댓글 리스트
 	public List<NoticesReplyVo> noticesReplyList(int bno);
 	
+	//댓글수정
+	public void noticesReplyModify(NoticesReplyVo vo);
+	
+	//댓글삭제
+	public void noticesReplyDelete(int rno);
 }
