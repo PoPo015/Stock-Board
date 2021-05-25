@@ -140,12 +140,29 @@ replyer varchar2(500),
 regTime date default sysdate,
 updateTime date
 )
+
 CREATE SEQUENCE seq_noticesReply INCREMENT BY 1 START WITH 1 -- 시퀀스 생성
 ALTER TABLE noticesreply ADD CONSTRAINT pk_noticesReply PRIMARY KEY (rno)
-ALTER TABLE noticesreply ADD CONSTRAINTS fk_noticesReply FOREIGN KEY (bno) REFERENCES notices(bno)
+ALTER TABLE noticesreply ADD CONSTRAINT fk_noticesReply FOREIGN KEY (bno) REFERENCES notices(bno) ON DELETE CASCADE --부모키삭제시 자손도 같이삭제
 
 
 insert into noticesreply(rno, bno, reply, replyer)
 values (1,194,'댓글내용','댓글작성자')
         
+SELECT seq_noticesReply.NEXTVAL as rno FROM DUAL;
+SELECT LAST_INSERT_ID()
+
 select /*+ index(noticesreply pk_noticesReply) */ * from noticesreply where bno =294      --댓글목록
+
+update noticesreply set
+reply = '변경' where rno = 2343
+
+-----파일업로드-----
+파일번호
+파일게시글번호
+원본이름
+uuid
+업로드시간
+수정시간
+파일크기
+파일종류

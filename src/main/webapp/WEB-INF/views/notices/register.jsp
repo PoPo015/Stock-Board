@@ -372,8 +372,9 @@
 											내용
 											<textarea style="width: 90%" name="content" id="content"></textarea>
 										</div>
+										<input type="file" id="file" name="file">
 										<input type="hidden" name="writer" value="관리자">
-
+	
 										<div style="float: right">
 											<button type="button" class="btn btn-suwccess"
 												onclick="registerClick()">등록</button>
@@ -409,6 +410,17 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="${pageContext.request.contextPath}/resources/dist/js/sb-admin-2.js"></script>
+
+<script>
+
+ $("#file").change(function(){
+ 	
+	 console.log("파일 변경사항 존재");
+	 
+ });
+
+ </script>
+
 
 <script>
 

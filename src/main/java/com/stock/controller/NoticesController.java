@@ -114,8 +114,6 @@ public class NoticesController {
 		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);
 		
-		log.info(service.noticesReply(vo));
-		
 		return new ResponseEntity<NoticesReplyVo>(vo,HttpStatus.OK);
 	}
 	
