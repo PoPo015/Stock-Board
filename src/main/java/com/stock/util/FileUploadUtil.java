@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
-public class FileUpload {
+public class FileUploadUtil {
 
     //썸네일 생성
     public static String getImage(String fileName, String filePath) throws IOException, InterruptedException {

@@ -372,8 +372,9 @@
 											내용
 											<textarea style="width: 90%" name="content" id="content"></textarea>
 										</div>
+										
 										<input type="file" id="file" name="file">
-										<input type="hidden" name="writer" value="관리자">
+										<input type="hidden" name="writer" value="관리자"> 
 	
 										<div style="float: right">
 											<button type="button" class="btn btn-suwccess"
@@ -413,17 +414,65 @@
 
 <script>
 
+//ajax 파일업로드
  $("#file").change(function(){
  	
 	 console.log("파일 변경사항 존재");
+	 let formData = new FormData();					 //form 에 file을 담기 위해 생성 
+	 let inputFile = $("input[name='file']");			 //file 객체를 변수에담음
+	 let file = inputFile[0].files;
 	 
+ 	var fileOriginal = file[0].name; //파일이름
+    //파일 이름에서 뒤에부터 . 을찾아서 그 인덱스의 +1 번쨰를 문자를 뗴고, 다소문자로변경
+    var fileKind = fileOriginal.substring(file[0].name.lastIndexOf(".") +1).toLowerCase();
+    console.log("파일이름 :" + fileOriginal);
+    console.log("확장자명 :" + fileKind);
+	
+// 	//파일 용량 5메가로 제한
+// 	console.log(files[i].size);
+// 	if(files[i].size > 10 * 1024 * 1024){
+// 		alert("파일 용량이 너무 큽니다.");
+// 		return
+// 	}
+    
+//     //파일 확장자 검증
+//     if(extName3 != "jpg" && extName3 != "png" && extName3 != "txt" && extName3 != "gif" && extName3 != "jpeg"){
+//        alert("png, jpg ,txt 파일만 가능합니다");
+//        $("#file").val(""); //파일목록 비우기
+//        return;   
+//     }
+    
+// 	//이클립스 3초대기..            
+//     if(extName3 == "png" || extName3 == "jpg" && extName3 != "gif" && extName3 != "jpeg" ){
+//     	console.log("png입니다~");
+//     	alert("이미지 업로드시 3초정도 로딩시간이 걸립니다.");
+//     }
+	 
+	 
+	 
+	 formData.append("file", file[0]);
+   
+ 
+     //processData, contentType는 false로 지정
+     $.ajax({
+           type : "post",
+           url : "/upload/uploadAjax",
+           data : formData,
+           processData : false,
+           contentType : false,
+           success : function(data) {
+				console.log("성공");
+				console.log(data.fileBno);
+           },
+           error : function(error) {
+				console.log("실패");
+           } 
+        }); 
  });
 
  </script>
 
-
 <script>
-
    //새글작성 버튼 클릭
    function registerClick(){
 

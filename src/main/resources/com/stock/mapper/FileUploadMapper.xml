@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stock.mapper.FileUploadMapper">
+
+ <insert id="attach">
+ 
+ 	<selectKey order="BEFORE" resultType="int" keyProperty="fileBno">
+ 	SELECT SEQ_FILE.NEXTVAL FROM DUAL
+ 	</selectKey>
+	insert into noticesFile (file_bno, file_original_nm, file_UUID_nm, file_Path, file_size, file_kind)
+	values(#{fileBno},'오리지널파일이름231','uuid이름','파일경로',150,'파일확장자')
+</insert>
+<!--
+<select id="insertbno" resultType="int">
+	select MAX(bno)+1 from tbl_board 
+</select>
+
+
+<delete id="deleteAttach">
+	delete from tbl_attach where uid_filename= #{SfileCut}
+</delete>
+
+<select id="fileListGet" resultType="com.kst.domain.Board_AttachDTO" parameterType="int">
+	select * from tbl_attach where board_bno = #{bno}
+</select> -->
+
+</mapper>

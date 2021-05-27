@@ -158,11 +158,17 @@ update noticesreply set
 reply = '변경' where rno = 2343
 
 -----파일업로드-----
-파일번호
-파일게시글번호
-원본이름
-uuid
-업로드시간
-수정시간
-파일크기
-파일종류
+create table noticesFile(
+file_bno number(10),                        --파일번호
+file_notices_bno number(10),                --게시글번호
+file_original_nm varchar2(100),             --파일오리지널이름
+file_UUID_nm varchar2(100),                 --파일UUID이름
+file_Path varchar2(100),                  --파일경로
+file_upload_reg date default sysdate,       --파일등록시간
+file_change_reg date,                       --파일변경시간
+file_size number(10),                         --파일사이즈
+file_kind varchar2(100),                       --파일종류
+CONSTRAINT pk_filebno PRIMARY KEY(file_bno),    --PK번호
+CONSTRAINT fk_filebno FOREIGN KEY(file_notices_bno) REFERENCES notices(bno) --FK 외래키(외래키에 bno값이 안들어가있어 제약조건 위배 일단 주석)
+)
+create sequence seq_file INCREMENT BY 1 START WITH 1; --시퀀스 생성
