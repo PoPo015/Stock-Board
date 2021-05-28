@@ -5,7 +5,9 @@ import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.stock.domain.NoticesFileUploadVo;
@@ -41,9 +43,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 		vo.setFileUuidNm(UUIDFileName);																										//파일파일uuid vo에지정
 		vo.setFileOriginalNm(uploadFileName);																								//파일오리지널이름 vo에지정
 		vo.setFileSize((int)multipartfile.getSize());																						//파일사이즈 vo에지정
-
+		vo.setFileKind(uploadFileName.substring(uploadFileName.lastIndexOf(".")+1).toUpperCase());											//오리지널이름에서 확장자명을 찾아서,대문자변경
+		
 		log.info("파일vo----" + vo);
         log.info("voBno 실행전---" + vo.getFileBno());
+        vo.setImgFilePath(vo.getFilePath().substring(vo.getFilePath().indexOf("\\resources"))+"\\THUMB_"+ UUIDFileName.replaceAll(" ", "%20"));	//공백% 20로치환
+        vo.setFilePathDay(vo.getFilePath().substring(vo.getFilePath().lastIndexOf("\\") +1));													//날짜별 값 저장
+        
         try {
         	multipartfile.transferTo(saveFile);          			  																		 //파일 생성
            if(FileUploadUtil.getImage(UUIDFileName, uploadFolder) != null) {       															 //섬네일일경우 
@@ -55,11 +61,28 @@ public class FileUploadServiceImpl implements FileUploadService {
            mapper.attach(vo);																												 //DB에 저장
            log.info("voBno 실행후1---" + vo);
            log.info("voBno 실행후2---" + vo.getFileBno());
+           
         }catch (Exception e) {
            e.printStackTrace();
         }
-//       return new ResponseEntity<String>(thmnail, HttpStatus.OK);
         return vo;
+	}
+
+	@Override
+	public void removeFile(NoticesFileUploadVo vo) {
+		
+		log.info("서비스vo----" + vo);
+		
+		String filePath = "C:\\Users\\popo\\Documents\\stockboard\\src\\main\\webapp\\resources\\images\\"
+							+vo.getFilePathDay()+"\\"+vo.getFileOriginalNm();
+		
+		log.info("파일경로--" + filePath);
+		File fileName = new File(filePath);
+
+		
+		fileName.delete();
+		mapper.removeFile(vo.getFileBno());
+		
 	}
   
 		

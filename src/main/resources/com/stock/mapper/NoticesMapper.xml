@@ -11,8 +11,12 @@
 
 	<!-- 공지사항 등록 	-->
 	<insert id="noticesRegister">
-	INSERT INTO NOTICES(BNO, title, CONTENT, WRITER)
-	VALUES (SEQ_NOTICES.NEXTVAL,#{title},#{content},#{writer})
+	 	<selectKey order="BEFORE" resultType="int" keyProperty="bno">
+ 		SELECT SEQ_NOTICES.NEXTVAL FROM DUAL
+ 		</selectKey>
+	
+		INSERT INTO NOTICES(BNO, title, CONTENT, WRITER)
+		VALUES (#{bno}, #{title}, #{content}, #{writer})
 	</insert>
 
 	

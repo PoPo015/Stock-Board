@@ -1,4 +1,4 @@
-CREATE TABLE stock_vi(
+kimCREATE TABLE stock_vi(
 stk_id NUMBER(10,0), --번호
 stk_cd varchar2(50), --종목코드 
 stk_nm varchar2(50),  --종목명
@@ -172,3 +172,9 @@ CONSTRAINT pk_filebno PRIMARY KEY(file_bno),    --PK번호
 CONSTRAINT fk_filebno FOREIGN KEY(file_notices_bno) REFERENCES notices(bno) --FK 외래키(외래키에 bno값이 안들어가있어 제약조건 위배 일단 주석)
 )
 create sequence seq_file INCREMENT BY 1 START WITH 1; --시퀀스 생성
+
+
+update noticesFile set 
+file_notices_bno = 278 where file_bno = 134
+
+delete from noticesFile where file_bno = 151

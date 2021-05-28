@@ -386,6 +386,9 @@
 
 								</div>
                             </div>
+                            	<!-- 동적 파일 추가 리스트 -->
+                            	<div id="fileList">
+                            	</div>
                         </div>
                     </div>
                 </div>
@@ -412,6 +415,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="${pageContext.request.contextPath}/resources/dist/js/sb-admin-2.js"></script>
 
+
 <script>
 
 //ajax 파일업로드
@@ -428,29 +432,22 @@
     console.log("파일이름 :" + fileOriginal);
     console.log("확장자명 :" + fileKind);
 	
-// 	//파일 용량 5메가로 제한
-// 	console.log(files[i].size);
-// 	if(files[i].size > 10 * 1024 * 1024){
-// 		alert("파일 용량이 너무 큽니다.");
-// 		return
-// 	}
+	//파일 용량 5메가로 제한
+	console.log(file[0].size);
+	if(file[0].size > 10 * 1024 * 1024){
+		alert("파일 용량이 너무 큽니다.");
+		return false;
+	}
     
-//     //파일 확장자 검증
-//     if(extName3 != "jpg" && extName3 != "png" && extName3 != "txt" && extName3 != "gif" && extName3 != "jpeg"){
-//        alert("png, jpg ,txt 파일만 가능합니다");
-//        $("#file").val(""); //파일목록 비우기
-//        return;   
-//     }
+    //파일 확장자 검증
+    if(fileKind != "jpg" && fileKind != "png" && fileKind != "txt" && fileKind != "gif" && fileKind != "jpeg"){
+       alert("png, jpg ,txt 파일만 가능합니다");
+       $("#file").val(""); //파일목록 비우기
+       return false;   
+    }
     
-// 	//이클립스 3초대기..            
-//     if(extName3 == "png" || extName3 == "jpg" && extName3 != "gif" && extName3 != "jpeg" ){
-//     	console.log("png입니다~");
-//     	alert("이미지 업로드시 3초정도 로딩시간이 걸립니다.");
-//     }
-	 
-	 
-	 
 	 formData.append("file", file[0]);
+	 
    
  
      //processData, contentType는 false로 지정
@@ -460,15 +457,64 @@
            data : formData,
            processData : false,
            contentType : false,
+           beforeSend : showLoadingBar(),			//로딩바 실행
            success : function(data) {
-				console.log("성공");
-				console.log(data.fileBno);
+        	   
+          		let fileList = "<p id='fileRemoveBno"+data.fileBno+"'>"
+				fileList += "<img src="+data.imgFilePath+">"+data.fileOriginalNm+""
+          		fileList += "<button id='fileRemove' onclick=fileRemove(`"+encodeURIComponent(data.fileUuidNm)+"`,"+data.fileBno+",`"+data.filePathDay+"`)>삭제</button><p>"
+           		$("#fileList").append(fileList);
+
+          		$("#file").val("");					//file 비우기
+          		let str = "<input type='hidden' name='fileBno' id='fileBno"+data.fileBno+"' value="+data.fileBno+">"		//테이블의 PK값 form에 추가
+           		$("#frm").append(str);
+
+          		
+          		setTimeout(function() {
+					showLoadingBarRemove();				//로딩창 지우기
+	          		  console.log('로딩창지운다');
+          		}, 100);
+
            },
            error : function(error) {
-				console.log("실패");
-           } 
+        	   	showLoadingBarRemove();
+				alert("파일업로드 실패");
+           }, 
         }); 
  });
+ 
+ //파일삭제 !!!!!!!여기부터작업해야함
+ function fileRemove(Nm, fileBno, filePath){
+	 let fileName = decodeURIComponent(Nm);
+	 console.log("파일삭제버튼클릭 --정보--");
+	 console.log("파일이름:" +fileName);
+	 console.log("파일번호:" +fileBno);
+	 console.log("파일경로:" + filePath);
+	 
+	 $("#fileBno"+fileBno+"").remove();				//폼안에 있는 hidden 값삭제
+	 $("#fileRemoveBno"+fileBno+"").remove();		//실시간 파일 올라가있는 자료삭제
+	 
+    	$.ajax({
+			    url:"/upload/removeUploadAjax", 
+			    type:"post",
+			    contentType: "application/json; charset=utf-8",
+			    data : JSON.stringify({
+			    	"fileOriginalNm" : fileName,
+			    	"fileBno" : fileBno,
+			    	"filePathDay" : filePath,
+			    }),
+			    success: function(data) {
+					alert("파일삭제 성공");
+			    },
+			    error: function(err) {
+					alert("파일삭제 실패");
+			    }
+			});	 
+ }
+ 
+ 
+
+
 
  </script>
 
@@ -480,6 +526,27 @@
    }
 
 
+   //로딩바
+   function showLoadingBar() {
+	   var maskHeight = $(document).height(); 
+	   var maskWidth = window.document.body.clientWidth; 
+	   var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>"; 
+	   var loadingImg = '';
+	   loadingImg += "<div id='loadingImg' style='position:absolute; left:50%; top:40%; display:none; z-index:10000;'>"; 
+	   loadingImg += " <img src='/resources/common/loading.gif'>"; 
+	   loadingImg += "</div>"; $('body').append(mask).append(loadingImg); 
+	   $('#mask').css({ 'width' : maskWidth , 'height': maskHeight , 'opacity' : '0.3' }); 
+	   $('#mask').show();
+	   $('#loadingImg').show(); 
+	}
+   
+	//로딩바삭제
+   function showLoadingBarRemove(){
+	   
+	   $("#mask").remove();
+	   $("#loadingImg").remove();
+   }
+   
 </script>
 
 

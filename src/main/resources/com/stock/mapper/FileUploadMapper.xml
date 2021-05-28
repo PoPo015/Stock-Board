@@ -2,20 +2,27 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.stock.mapper.FileUploadMapper">
+		
+	<!-- 파일 DB 저장 -->
+	 <insert id="attach" parameterType="com.stock.domain.NoticesFileUploadVo">
+	 	<selectKey order="BEFORE" resultType="int" keyProperty="fileBno">
+	 	SELECT SEQ_FILE.NEXTVAL FROM DUAL
+	 	</selectKey>
+		INSERT INTO NOTICESFILE (FILE_BNO, FILE_ORIGINAL_NM, FILE_UUID_NM, FILE_PATH, FILE_SIZE, FILE_KIND)
+		VALUES(#{fileBno}, #{fileOriginalNm}, #{fileUuidNm}, #{filePath}, #{fileSize}, #{fileKind})
+	</insert>
+	
+	<!-- 파일 FK 업데이트 -->
+	<update id="fileBnoUpdate" parameterType="int">
+	UPDATE NOTICESFILE SET 
+	FILE_NOTICES_BNO = #{bno} WHERE FILE_BNO = #{fileBno}
+	</update>
 
- <insert id="attach">
- 
- 	<selectKey order="BEFORE" resultType="int" keyProperty="fileBno">
- 	SELECT SEQ_FILE.NEXTVAL FROM DUAL
- 	</selectKey>
-	insert into noticesFile (file_bno, file_original_nm, file_UUID_nm, file_Path, file_size, file_kind)
-	values(#{fileBno},'오리지널파일이름231','uuid이름','파일경로',150,'파일확장자')
-</insert>
+	<delete id="removeFile" parameterType="int">
+	DELETE FROM NOTICESFILE WHERE FILE_BNO = #{bno}
+	</delete>
+
 <!--
-<select id="insertbno" resultType="int">
-	select MAX(bno)+1 from tbl_board 
-</select>
-
 
 <delete id="deleteAttach">
 	delete from tbl_attach where uid_filename= #{SfileCut}

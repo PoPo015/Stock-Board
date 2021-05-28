@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
+import com.stock.mapper.FileUploadMapper;
 import com.stock.mapper.NoticesMapper;
 import com.stock.service.NoticesService;
 import com.stock.util.Criteria;
@@ -23,12 +25,32 @@ public class NoticesServiceImpl implements NoticesService {
 	@Autowired
 	private NoticesMapper mapper;
 	
+	@Autowired
+	private FileUploadMapper fileMapper;
+	
 	@Override
-	public void notices(NoticesVo vo) throws Exception {
+	public void notices(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno) throws Exception {
 		
 		log.info("vo----" + vo);
-		
 		if(vo.getWriter().equals("관리자")) {
+			mapper.noticesRegister(vo);
+		}
+		
+		
+		//파일 bno가 form에 담겨옴 업데이트.
+		if(fileBno != null) {
+			
+			for(int i = 0; i<fileBno.size(); i++) {
+				log.info("fileBno있다---" + fileBno.get(i));
+				log.info("값저장된 bno----" + vo.getBno());
+				fileMapper.fileBnoUpdate(vo.getBno(), fileBno.get(i));
+				log.info("업데이트합니다");
+			}
+			
+		}
+
+		
+		
 			
 //			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
 //			String time1 = simpleDateFormat.format(new Date());
@@ -36,8 +58,6 @@ public class NoticesServiceImpl implements NoticesService {
 //			vo.setRegTime(time1);
 //			log.info("등록 시간-----" + vo);
 //			
-			mapper.noticesRegister(vo);
-		}
 	
 	}
 

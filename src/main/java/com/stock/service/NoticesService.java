@@ -2,6 +2,8 @@ package com.stock.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.util.Criteria;
@@ -9,7 +11,7 @@ import com.stock.util.Criteria;
 public interface NoticesService {
 
 	//공지사항 등록
-	public void notices(NoticesVo vo) throws Exception;
+	public void notices(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno) throws Exception;
 	
 	//공지사항 출력
 	public List<NoticesVo> noticesList();

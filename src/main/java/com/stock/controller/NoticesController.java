@@ -1,6 +1,5 @@
 package com.stock.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +51,11 @@ public class NoticesController {
 	
 	//공지사항 작성
 	@PostMapping("/register")
-	public String noticesRegister2(NoticesVo vo) throws Exception {
+	public String noticesRegister2(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno) throws Exception {
 
 		log.info("vo----"+ vo);
-		service.notices(vo);
+		
+		service.notices(vo,fileBno);
 		
 		return "redirect:/notices/list";
 	}
