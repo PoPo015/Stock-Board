@@ -1,13 +1,13 @@
 package com.stock.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.stock.domain.NoticesFileUploadVo;
@@ -28,6 +28,18 @@ public class FileUploadServiceImpl implements FileUploadService {
 	public NoticesFileUploadVo uploadFile(MultipartFile multipartfile) {
 		
 		NoticesFileUploadVo vo = new NoticesFileUploadVo();
+		
+		//정규식 공백 체크못함..리팩토링필요(서버단 검증 로직.)
+//		String regKind = "^([\\S]+(\\.(?i)(jpg|png|gif|gif|bmp|jpeg|txt))$)";
+//		int fileSize = 1024*1024*10;
+//		
+//		log.info(multipartfile.getOriginalFilename().matches(regKind));
+//		if(multipartfile.getOriginalFilename().matches(regKind) == false || fileSize < multipartfile.getSize()) {
+//			
+//			log.info("파일 확장자 or 파일 사이즈 false 반환합니다.");
+//			
+//			return vo;
+//		}
 		
 		log.info("Service----" + multipartfile.getOriginalFilename());
 			
@@ -74,19 +86,47 @@ public class FileUploadServiceImpl implements FileUploadService {
 		log.info("서비스vo----" + vo);
 		
 		String filePath = "C:\\Users\\popo\\Documents\\stockboard\\src\\main\\webapp\\resources\\images\\"
-							+vo.getFilePathDay()+"\\"+vo.getFileOriginalNm();
+							+vo.getFilePathDay()+"\\";
+		String regKind = "^([\\S]+(\\.(?i)(jpg|png|gif|gif|bmp|jpeg))$)";
+		
+		log.info(vo.getFileOriginalNm().matches(regKind));
+		
+		
+		//정규식 파일 공백 체크못함..리팩토링필요
+		if(vo.getFileOriginalNm().matches(regKind)) {
+			
+			log.info("이미지파일입니다. 썸네일도 삭제합니다");
+			new File(filePath + "THUMB_" +  vo.getFileOriginalNm()).delete();			//썸네일파일삭제
+		}
+		
 		
 		log.info("파일경로--" + filePath);
-		File fileName = new File(filePath);
-
-		
-		fileName.delete();
+		new File(filePath + vo.getFileOriginalNm()).delete();		//파일삭제
 		mapper.removeFile(vo.getFileBno());
 		
 	}
-  
+
+	
+	@Override
+	public List<NoticesFileUploadVo> fileListGet(int bno) {
+
+	    	  log.info("서비스----"+ bno);
+
+	    	  
+	    	  
+	    	  List<NoticesFileUploadVo> arr = mapper.fileListGet(bno);
+	    	  for(int i=0; i< arr.size(); i++) {
+	    		
+	    		  arr.get(i).setImgFilePath(arr.get(i).getFilePath().substring(arr.get(i).getFilePath().indexOf("\\resources")) + "\\" + arr.get(i).getFileUuidNm() );
+	    		  
+	    		  log.info(arr.get(i));
+	    	  }
+	    	  	
+	    	  return arr;
+		}
 		
-	}
+}
+	
 
 	
 	

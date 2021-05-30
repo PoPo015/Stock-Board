@@ -1,5 +1,7 @@
 package com.stock.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.stock.domain.NoticesFileUploadVo;
@@ -14,7 +16,9 @@ public interface FileUploadMapper {
 	//파일 삭제
 	public void removeFile(int fileBno);
 	
-//	public ArrayList<NoticesFileUploadVo> fileListGet(int bno); //게시물 번호 파일가져오기
+	//파일 게시물 가져오기
+	public List<NoticesFileUploadVo> fileListGet(int bno);
+	
 
 	
 }

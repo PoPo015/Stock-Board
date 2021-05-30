@@ -1,7 +1,10 @@
 package com.stock.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +56,18 @@ public class UploadController {
 		
 
     } //end 파일삭제
+	
+	//파일 목록 가져오기
+	@ResponseBody
+	@GetMapping(value = "/uploadGet")
+    public List<NoticesFileUploadVo> fileList(@RequestParam("bno") int bno){
+  	  
+		log.info("controller~~!!"+ bno);
+
+  	 
+  	  	return fileUpload.fileListGet(bno);
+  	 
+	}
 	
 	
 	

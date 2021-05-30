@@ -441,7 +441,7 @@
     
     //파일 확장자 검증
     if(fileKind != "jpg" && fileKind != "png" && fileKind != "txt" && fileKind != "gif" && fileKind != "jpeg"){
-       alert("png, jpg ,txt 파일만 가능합니다");
+       alert("이미지,txt 파일만 가능합니다");
        $("#file").val(""); //파일목록 비우기
        return false;   
     }

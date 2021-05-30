@@ -306,7 +306,7 @@
                             <a href="#"><i class="fa fa-table fa-fw"></i> 자유게시판</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i> 문의게시판</a>
+                            <a href="javascript:void(0)"><i class="fa fa-edit fa-fw"></i> 문의게시판</a>
                         </li>
                         
 
@@ -404,14 +404,14 @@
 											<c:out value="${details.title}" />
 										</h3>
 									</div>
-
-									<div class="col-xs-11">
+								<div style="display:flex;">
+									<div class="col-xs-11" id="dataList" style="min-height:300px">
 										<h4>
 											<c:out value="${details.content}" />
 										</h4>
 									</div>
 
-									<div class="col-xs-1" style="text-align:center; height: 50%;border-left: 1px solid gray">
+									<div class="col-xs-1" style="text-align:center; border-left: 1px solid gray">
 										<!--수정삭제 -->
 										<div class="btn-group content-function-group">
 											<a class="glyphicon glyphicon-cog" data-toggle="dropdown" href="#"></a>
@@ -422,9 +422,9 @@
 										</div>
 										<!--수정삭제 -->
 									</div>
-
 								</div>
 							</div>
+						</div>
 							
 							<!-- 댓글 -->
 			<div class="panel panel-default">
@@ -472,6 +472,39 @@
 
 <script>
 
+(function () {
+	console.log("즉시실행함수!");	
+
+	$.ajax({
+		url: "/upload/uploadGet",
+		type: "get",
+		data: {"bno" : ${details.bno}},
+		success: function(data) {
+// 				console.log("성공" + JSON.stringify(data));
+				
+				$.each(data, function(index, value){
+
+					console.log(index + ":" + value.imgFilePath);	
+					
+					//확장자 체크해야함.
+					let str ="<img src="+value.imgFilePath+" style=width:100%>"
+					
+					$("#dataList").append(str)
+				});
+			
+		},
+		error: function(err){
+			console.log("실패");
+		}
+	});
+})();
+
+</script>
+
+
+
+<script>
+
 	//즉시 실행함수로, 댓글목록을 불러옴
 	var reply = function() {  
 		
@@ -498,7 +531,7 @@
 					replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
 					replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
 					replygetList += "<div id='replyBody'>" + replyList[i].reply 
-					replygetList += "<div class='btn-group content-function-group col-lg-6' style='float:right'>"     				
+					replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				
 					replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
 					replygetList += "<ul class='dropdown-menu dropdown-user'>"
 					replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
@@ -561,7 +594,7 @@
 				replyChg += "<div id='replyHeader'>" + replyList.replyer + "</div>"
 				replyChg += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList.regTime)+")</div>"
 				replyChg += "<div id='replyBody'>" + replyList.reply 
-				replyChg += "<div class='btn-group content-function-group col-lg-6' style='float:right'>"     				
+				replyChg += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px' >"     				
 				replyChg += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
 				replyChg += "<ul class='dropdown-menu dropdown-user'>"
 				replyChg += "<li><a onclick='replyModify("+replyList.rno+",`"+encodeReply+"`)' data-replyId="+replyList.rno+">"

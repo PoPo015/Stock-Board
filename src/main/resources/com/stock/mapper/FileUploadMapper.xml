@@ -10,26 +10,41 @@
 	 	</selectKey>
 		INSERT INTO NOTICESFILE (FILE_BNO, FILE_ORIGINAL_NM, FILE_UUID_NM, FILE_PATH, FILE_SIZE, FILE_KIND)
 		VALUES(#{fileBno}, #{fileOriginalNm}, #{fileUuidNm}, #{filePath}, #{fileSize}, #{fileKind})
+		
+	------파일 DB저장	
 	</insert>
 	
 	<!-- 파일 FK 업데이트 -->
 	<update id="fileBnoUpdate" parameterType="int">
 	UPDATE NOTICESFILE SET 
 	FILE_NOTICES_BNO = #{bno} WHERE FILE_BNO = #{fileBno}
+	
+	------파일 FK업데이트	
 	</update>
 
 	<delete id="removeFile" parameterType="int">
 	DELETE FROM NOTICESFILE WHERE FILE_BNO = #{bno}
+	
+	------파일 업로드 삭제
 	</delete>
+	
+	<!-- db컬럼명과 dto가 달라, setter가 안먹힘. 대안방안코드 -->
+	<resultMap type="com.stock.domain.NoticesFileUploadVo" id="fileVo">
+		<result column="file_bno" property="fileBno"/>
+		<result column="file_notices_bno" property="fileNoticesBno"/>
+		<result column="file_original_nm" property="fileOriginalNm"/>		
+		<result column="file_UUID_nm" property="fileUuidNm"/>
+		<result column="file_Path" property="filePath"/>
+		<result column="file_upload_reg" property="fileUploadReg"/>
+		<result column="file_change_reg" property="fileChangeReg"/>
+		<result column="file_size" property="fileSize"/>
+		<result column="file_kind" property="fileKind"/>		
+	</resultMap>
 
-<!--
+	<select id="fileListGet" parameterType="int" resultMap="fileVo">
+		SELECT * FROM NOTICESFILE WHERE FILE_NOTICES_BNO = #{bno}
 
-<delete id="deleteAttach">
-	delete from tbl_attach where uid_filename= #{SfileCut}
-</delete>
-
-<select id="fileListGet" resultType="com.kst.domain.Board_AttachDTO" parameterType="int">
-	select * from tbl_attach where board_bno = #{bno}
-</select> -->
+	-----파일 가져오기
+	</select> 
 
 </mapper>
