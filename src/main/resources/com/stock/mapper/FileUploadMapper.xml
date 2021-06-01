@@ -47,4 +47,8 @@
 	-----파일 가져오기
 	</select> 
 
+	<select id="nullFile" resultMap="fileVo">
+	SELECT * FROM NOTICESFILE WHERE FILE_NOTICES_BNO IS NULL
+	</select>
+
 </mapper>

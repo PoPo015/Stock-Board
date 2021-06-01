@@ -19,6 +19,7 @@ public interface FileUploadMapper {
 	//파일 게시물 가져오기
 	public List<NoticesFileUploadVo> fileListGet(int bno);
 	
-
+	//파일 null 체크 값삭제
+	public List<NoticesFileUploadVo> nullFile();
 	
 }

@@ -43,7 +43,7 @@
 	<![CDATA[
 	    SELECT * FROM 
 		 (
-		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT
+		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT, (SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE reply.bno = notices.bno) as replyCount
 		 ,(SELECT COUNT(*) FROM NOTICES) AS total
 		 FROM NOTICES NOTICES
 		 WHERE BNO > 0 AND ROWNUM > 0 AND ROWNUM <= #{pageNum} * #{amount}
@@ -87,9 +87,17 @@
 	REPLY = #{reply} WHERE RNO = #{rno}
 	</update>
 	
+	<!-- 댓글삭제 -->
 	<delete id="noticesReplyDelete" parameterType="int">
 	DELETE FROM NOTICESREPLY
 	WHERE RNO =#{rno}
 	</delete>
+	
+	<!-- 게시글 조회수 +1 -->
+	<update id="viewsCount" parameterType="int">
+	UPDATE NOTICES SET VIEWSCOUNT = VIEWSCOUNT + 1 WHERE BNO = #{bno}
+	</update>
+	
+	
 	
 </mapper>

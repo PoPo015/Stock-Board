@@ -96,11 +96,11 @@ public class NoticesController {
 	
 	//공지사항 수정
 	@PostMapping("/modify")
-	public String noticesModify2(NoticesVo vo, Model model) {
+	public String noticesModify2(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno, Model model) {
 	
 		log.info("수정----" + vo);
 		
-		service.modify(vo);
+		service.modify(vo,fileBno);
 			
 		return "redirect:/notices/list";
 	}

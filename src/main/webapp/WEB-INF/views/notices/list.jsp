@@ -251,15 +251,27 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
+                    
+                    
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> 로그인</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> 회원가입</a>
                         </li>
                     </ul>
+                    
+                    
+                    <!-- 로그인 했을시 
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
+                        </li>
+                    </ul>
+                    
+                     -->
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->
@@ -325,18 +337,18 @@
 <!--                             </ul> -->
 <!--                             /.nav-second-level -->
 <!--                         </li> -->
-                        <li>
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> 로그인<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="blank.html"> 마이페이지</a>
-                                </li>
-                                <li>
-                                    <a href="login.html"> 로그아웃</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+<!--                         <li> -->
+<!--                             <a href="#"><i class="fa fa-files-o fa-fw"></i> 로그인<span class="fa arrow"></span></a> -->
+<!--                             <ul class="nav nav-second-level"> -->
+<!--                                 <li> -->
+<!--                                     <a href="blank.html"> 마이페이지</a> -->
+<!--                                 </li> -->
+<!--                                 <li> -->
+<!--                                     <a href="login.html"> 로그아웃</a> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                             /.nav-second-level -->
+<!--                         </li> -->
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

@@ -11,6 +11,8 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import org.springframework.scheduling.annotation.Scheduled;
+
 import lombok.extern.log4j.Log4j;
 
 @Log4j
@@ -73,7 +75,8 @@ public class FileUploadUtil {
           String datefolder =sdf.format(dt).toString();
           log.info(datefolder);
 
-          File dir = new File("C:\\Users\\PoPo\\Documents\\kimBoard\\board2\\src\\main\\webapp\\resources\\images", datefolder);
+          File dir = new File("C:\\Users\\popo\\Documents\\stockboard\\src\\main\\webapp\\resources\\images", datefolder);
+          
           // 폴더가 없으면 생성     
           if(!dir.exists()){
              dir.mkdir();
@@ -82,6 +85,5 @@ public class FileUploadUtil {
        return datefolder;
 
     } //end 날짜별폴더생성 메소드
-	
 	
 }

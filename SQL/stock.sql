@@ -131,6 +131,14 @@ values (seq_notices.nextval,'테스트','테스트','테스트')
 
 
 	 	SELECT COUNT(*) FROM NOTICES WHERE title LIKE '제목'
+        
+        select count(*) from tbl_reply reply where reply.bno = board.bno as replyCount
+        update notices set viewsCount = viewsCount + 1 where bno = 292
+	
+    SELECT (SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE reply.297 = notices.297) as replyCount FROM NOTICES WHERE BNO =297
+        
+        
+        SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE noticesreply.bno = notices.bno
 ----공지사항 댓글----
 create table noticesreply(
 rno number(10) not null,
@@ -178,3 +186,7 @@ update noticesFile set
 file_notices_bno = 278 where file_bno = 134
 
 delete from noticesFile where file_bno = 151
+
+
+
+select * from noticesFile where file_notices_bno is null

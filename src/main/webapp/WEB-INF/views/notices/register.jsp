@@ -440,8 +440,8 @@
 	}
     
     //파일 확장자 검증
-    if(fileKind != "jpg" && fileKind != "png" && fileKind != "txt" && fileKind != "gif" && fileKind != "jpeg"){
-       alert("이미지,txt 파일만 가능합니다");
+    if(fileKind != "jpg" && fileKind != "png" && fileKind != "gif" && fileKind != "jpeg"){
+       alert("이미지 파일만 가능합니다");
        $("#file").val(""); //파일목록 비우기
        return false;   
     }
@@ -473,7 +473,7 @@
           		setTimeout(function() {
 					showLoadingBarRemove();				//로딩창 지우기
 	          		  console.log('로딩창지운다');
-          		}, 100);
+          		}, 3000);
 
            },
            error : function(error) {

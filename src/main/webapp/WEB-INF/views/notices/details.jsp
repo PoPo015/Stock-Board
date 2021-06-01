@@ -340,18 +340,18 @@
 <!--                             </ul> -->
 <!--                             /.nav-second-level -->
 <!--                         </li> -->
-                        <li>
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> 로그인<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="blank.html"> 마이페이지</a>
-                                </li>
-                                <li>
-                                    <a href="login.html"> 로그아웃</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+<!--                         <li> -->
+<!--                             <a href="#"><i class="fa fa-files-o fa-fw"></i> 로그인<span class="fa arrow"></span></a> -->
+<!--                             <ul class="nav nav-second-level"> -->
+<!--                                 <li> -->
+<!--                                     <a href="blank.html"> 마이페이지</a> -->
+<!--                                 </li> -->
+<!--                                 <li> -->
+<!--                                     <a href="login.html"> 로그아웃</a> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                             /.nav-second-level -->
+<!--                         </li> -->
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -381,13 +381,9 @@
 										<c:out value="${details.viewsCount}" />
 										</i>&nbsp; 
 									
-										<i class="fa fa-comment right"> 
-										<c:out value="${details.replyCount}" />&nbsp;
+										<i class="fa fa-font-awesome right"> 
+										<c:out value="#${details.bno}" />&nbsp;
 										</i>
-										
-										<span class="right">
-										#<c:out value="${details.bno}" />&nbsp;
-										</span>
 										
 									</span> 
 									<br>
@@ -484,10 +480,10 @@
 				
 				$.each(data, function(index, value){
 
-					console.log(index + ":" + value.imgFilePath);	
+					console.log(index + ":" + value.imgFilePath.replaceAll(" ","%20"));	
 					
 					//확장자 체크해야함.
-					let str ="<img src="+value.imgFilePath+" style=width:100%>"
+					let str ="<img src="+value.imgFilePath.replaceAll(" ","%20")+" style=width:100%>"
 					
 					$("#dataList").append(str)
 				});

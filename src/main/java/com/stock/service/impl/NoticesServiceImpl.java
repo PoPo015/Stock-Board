@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -68,10 +69,12 @@ public class NoticesServiceImpl implements NoticesService {
 		
 	}
 
+	//트랜잭션 
+	@Transactional
 	@Override
 	public NoticesVo details(int bno) {
 
-		log.info(mapper.details(bno));
+		mapper.viewsCount(bno);
 		
 		return mapper.details(bno);
 		
@@ -87,10 +90,22 @@ public class NoticesServiceImpl implements NoticesService {
 	}
 
 	@Override
-	public void modify(NoticesVo vo) {
+	public void modify(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno) {
 
 		log.info("서비스 수정---" + vo );
 		
+		//파일 bno가 form에 담겨옴 업데이트.
+		if(fileBno != null) {
+			
+			for(int i = 0; i<fileBno.size(); i++) {
+				log.info("fileBno있다---" + fileBno.get(i));
+				log.info("값저장된 bno----" + vo.getBno());
+				fileMapper.fileBnoUpdate(vo.getBno(), fileBno.get(i));
+				log.info("업데이트합니다");
+			}
+			
+		}
+
 		mapper.modify(vo);
 	}
 

@@ -11,7 +11,7 @@ import com.stock.util.Criteria;
 public interface NoticesService {
 
 	//공지사항 등록
-	public void notices(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno) throws Exception;
+	public void notices(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno) throws Exception;
 	
 	//공지사항 출력
 	public List<NoticesVo> noticesList();
@@ -23,7 +23,7 @@ public interface NoticesService {
 	public void delete(int bno);
 	
 	//공지사항 수정
-	public void modify(NoticesVo vo);
+	public void modify(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno);
 
 	//일반 페이징list
 	public List<NoticesVo> getList(Criteria cri);

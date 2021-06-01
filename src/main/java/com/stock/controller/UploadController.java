@@ -60,14 +60,16 @@ public class UploadController {
 	//파일 목록 가져오기
 	@ResponseBody
 	@GetMapping(value = "/uploadGet")
-    public List<NoticesFileUploadVo> fileList(@RequestParam("bno") int bno){
+    public List<NoticesFileUploadVo> fileList(@RequestParam(value= "bno", required = false)int bno){
   	  
-		log.info("controller~~!!"+ bno);
+		log.info("bno----+"+ bno);
 
   	 
   	  	return fileUpload.fileListGet(bno);
   	 
 	}
+
+
 	
 	
 	
