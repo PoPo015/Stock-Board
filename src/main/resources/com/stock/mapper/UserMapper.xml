@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stock.mapper.UserMapper">
+
+	<select id ="userIdCheck" resultType="int" parameterType="String">
+		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = #{userId}
+
+	// ID중복체크
+	</select>
+
+	<select id ="EmailCheck" resultType="int" parameterType="String">
+		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_EMAIL = #{email}
+
+	//Email 중복체크
+	</select>
+
+	<insert id="userCreate" parameterType="com.stock.domain.UserVo">
+	INSERT INTO NOTICES_USER(USER_ID, USER_PW, USER_NAME, USER_PHONE, USER_ADDRESS_ZIP_CODE, USER_ADDRESS_ROAD_NAME, USER_ADDRESS_DETAILED, USER_EMAIL, USER_IP)
+	VALUES (#{userId}, #{userPw}, #{userNm},#{userPhone}, #{addressZipCode}, #{addressRoadName}, #{addressDetailed}, #{userEmail}, #{userIp})
+	
+	//회원가입
+	</insert>
+	
+	<select id="userLogin" parameterType="com.stock.domain.UserVo" resultType="int">
+	   SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID=#{userId}AND USER_PW =#{userPw}
+
+	//로그인	
+	</select>
+	
+	
+	
+</mapper>

@@ -190,3 +190,20 @@ delete from noticesFile where file_bno = 151
 
 
 select * from noticesFile where file_notices_bno is null
+
+
+----·Î±×ÀÎ----
+create table notices_user(
+user_id varchar2(30),
+user_pw varchar2(150),
+user_name varchar2(20),
+user_phone varchar2(20),
+user_reg date default sysdate,
+user_address_zip_code number(10),
+user_address_road_name varchar2(100),
+user_address_detailed varchar2(100),
+user_email varchar2(100),
+user_ip varchar2(100)
+)
+		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = 'abc'
+    select count(*) from notices_user where user_id='id' and user_pw ='pw'

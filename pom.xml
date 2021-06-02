@@ -15,6 +15,14 @@
 	</properties>
 	<dependencies>
 	
+	
+	<!-- bcrypt 암호화 라이브러리 -->
+	<dependency>
+	    <groupId>org.mindrot</groupId>
+	    <artifactId>jbcrypt</artifactId>
+	    <version>0.4</version>
+	</dependency>
+	
 	<!-- 파일업로드/다운로드 -->
 	<dependency>
 	    <groupId>commons-fileupload</groupId>
