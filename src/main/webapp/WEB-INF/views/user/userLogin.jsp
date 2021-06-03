@@ -42,7 +42,7 @@
 					       <label for="userId" class="col-sm-3 control-label">
 					       	 아이디</label>
 					       <div class="col-sm-4">
-					         <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" maxlength="12" required>
+					         <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" maxlength="12" required value="${userId}">
 					       </div>
 					     </div>
 
@@ -50,7 +50,7 @@
 					       <label for="userPw" class="col-sm-3 control-label">
 					       	 패스워드</label>
 					       <div class="col-sm-4">
-					         <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" maxlength="15" required>
+					         <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" maxlength="15" required value="${userPw}">
 					       </div>
 					     </div>
 
@@ -96,15 +96,17 @@
     <!-- /#wrapper -->
 
 
-<!-- <script> -->
-// 	$("#loginClick").click(function(){
-		
-// 		console.log("클릭~");
-// 		$("#frm").submit();
-// 	});
+<script>
+$(function(){
+    var responseMessage = "<c:out value="${err}" />";
+    
+    if(responseMessage !== ""){
+        alert("${err}");
+    }
+}) 
 
 
-<!-- </script> -->
+</script>
 
 </body>
 

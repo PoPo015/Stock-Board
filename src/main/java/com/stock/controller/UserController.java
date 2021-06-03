@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.stock.domain.UserVo;
 import com.stock.service.UserService;
@@ -39,11 +41,28 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public void loginPost(UserVo vo) {
+	public ModelAndView loginPost(UserVo vo, HttpSession session) throws IOException {
 
-		log.info("로그인----" + vo);
+		log.info("로그인시도합니다 Controller----" + vo);
+		ModelAndView mv = new ModelAndView();
 		
-		service.userLogin(vo);
+		
+		String result = service.userLogin(vo);
+		
+		if(result.equals("로그인 성공")) {
+			log.info("로그인성공");
+			session.setAttribute("userId", vo.getUserId());
+			mv.setViewName("redirect:/notices/list");
+				
+			return mv;
+		}else {
+			log.info("로그인 실패");
+			mv.addObject("userId", vo.getUserId());
+			mv.addObject("userPw", vo.getUserPw());
+			mv.addObject("err", "로그인에 실패했습니다 \\n 정보를 확인해주세요.");
+			mv.setViewName("/user/userLogin");
+		return mv;
+		}
 		
 	}
 	

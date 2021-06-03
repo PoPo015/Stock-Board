@@ -1,5 +1,7 @@
 package com.stock.service.impl;
 
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,23 +54,30 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int userLogin(UserVo vo) {
-
-//		final String regId = "^[A-Za-z[0-9]]{5,12}$";															//id정규식
-//		final String regPw = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{5,15}$";		//pw정규식
+	public String userLogin(UserVo vo) {
 		
-//		if(regId.matches(vo.getUserId()) && regPw.matches(vo.getUserPw())) {
-
-			String hashPassword = BCrypt.hashpw(vo.getUserPw(), BCrypt.gensalt());		//패스워드 암호화
-	
-			vo.setUserPw(hashPassword);
-			
-			log.info(mapper.userLogin(vo));
-			
-			return mapper.userLogin(vo);
-//		}
+		String regId = "^[a-zA-Z0-9]{5,11}$";											//영문,숫자 5~11 미만 정규식
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
+		String hashPwCheck = mapper.userPwCheck(vo.getUserId());						//유저 hash pw값 반환
 		
-//		return 2;
+		log.info("regId----" + Pattern.matches(regId, vo.getUserId()));
+		log.info("regPw----" + Pattern.matches(regPw, vo.getUserPw()));
+		log.info("hashPwCheck----"+ hashPwCheck);
+		
+		
+		if(Pattern.matches(regId, vo.getUserId()) && Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null) {
+			
+			log.info("pwcheck---" + hashPwCheck);
+			log.info("BcrCheck--" + BCrypt.checkpw(vo.getUserPw(), hashPwCheck));	
+			
+			if(BCrypt.checkpw(vo.getUserPw(), hashPwCheck)) {							//아이디와 pw가 일치시
+				return "로그인 성공";
+			}
+
+		}
+		
+		return "로그인 실패";
+
 	}
 
 }

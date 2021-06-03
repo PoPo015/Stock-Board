@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> 
- 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <script>
 
 function googleSearch(){
@@ -225,6 +226,11 @@ function googleSearch(){
                     </a>
                     
                     
+                    <c:set var="userId" value="${userId}" />
+                    
+                    <c:choose>
+                    
+                    	<c:when test="${userId == ''}">
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="/user/login"><i class="fa fa-user fa-fw"></i> 로그인</a>
                         </li>
@@ -232,18 +238,22 @@ function googleSearch(){
                         <li><a href="/user/create"><i class="fa fa-sign-out fa-fw"></i> 회원가입</a>
                         </li>
                     </ul>
+                    	</c:when>
                     
-                    
-                    <!-- 로그인 했을시 
+                    	<c:when test="${userId != ''}">
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
+                        <li><i class="glyphicon glyphicon-user" style='padding-left: 23px'></i>&nbsp;&nbsp;${userId}
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
+                        <li><a href="/user/mypage"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/user/logout"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
                         </li>
                     </ul>
-                    
-                     -->
+                    	</c:when>
+                    	
+                    </c:choose>
                     <!-- /.dropdown-user -->
                 </li>
                 <!-- /.dropdown -->

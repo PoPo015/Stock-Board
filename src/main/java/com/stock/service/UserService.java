@@ -11,6 +11,6 @@ public interface UserService {
 	//user 회원가입
 	public void userCreate(UserVo vo,HttpServletRequest request);
 	//user 로그인
-	public int userLogin(UserVo vo);
+	public String userLogin(UserVo vo);
 
 }

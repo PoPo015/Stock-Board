@@ -206,4 +206,7 @@ user_email varchar2(100),
 user_ip varchar2(100)
 )
 		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = 'abc'
-    select count(*) from notices_user where user_id='id' and user_pw ='pw'
+        
+    select count(*) from notices_user where user_id='test1234' and user_pw= '$2a$10$hOg3EOuvOh3Uq1q7k/POOuQYKHgV7u75urB0Qh3iUcRCYzijREgXC'
+    
+    select user_pw from notices_user where user_id='test1234'
