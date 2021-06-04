@@ -230,7 +230,7 @@ function googleSearch(){
                     
                     <c:choose>
                     
-                    	<c:when test="${userId == ''}">
+                    	<c:when test="${empty userId}">
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="/user/login"><i class="fa fa-user fa-fw"></i> 로그인</a>
                         </li>
@@ -240,12 +240,12 @@ function googleSearch(){
                     </ul>
                     	</c:when>
                     
-                    	<c:when test="${userId != ''}">
+                    	<c:when test="${!empty userId}">
                     <ul class="dropdown-menu dropdown-user">
                         <li><i class="glyphicon glyphicon-user" style='padding-left: 23px'></i>&nbsp;&nbsp;${userId}
                         </li>
                         <li class="divider"></li>
-                        <li><a href="/user/mypage"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
+                        <li><a href="/user/myPage"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href="/user/logout"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>

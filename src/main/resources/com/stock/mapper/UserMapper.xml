@@ -3,6 +3,17 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.stock.mapper.UserMapper">
 
+	<resultMap type="com.stock.domain.UserVo" id="UserVo">
+		<result column="user_id" property="userId"/>
+		<result column="user_pw" property="userPw"/>
+		<result column="user_name" property="userNm"/>
+		<result column="user_phone" property="userPhone"/>
+		<result column="user_email" property="userEmail"/>
+		<result column="user_address_zip_code" property="addressZipCode"/>
+		<result column="user_address_road_name" property="addressRoadName"/>
+		<result column="user_address_detailed" property="addressDetailed"/>
+	</resultMap>
+
 	<select id ="userIdCheck" resultType="int" parameterType="String">
 		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = #{userId}
 
@@ -23,15 +34,26 @@
 	</insert>
 	
 	<select id="userLogin" parameterType="com.stock.domain.UserVo" resultType="int">
-	   SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID=#{userId}AND USER_PW =#{userPw}
+	   SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID=#{userId}AND USER_PW = #{userPw}
 
 	/* 로그인 */	
 	</select>
 	
 	<select id="userPwCheck" resultType="String" parameterType="String">
-	    select user_pw from notices_user where user_id=#{userPw}
+	    SELECT USER_PW FROM NOTICES_USER WHERE USER_ID = #{userId}
+	    
+	/* 유저 hashPW @@밑에거랑 합쳐서 리팩토링 할수있을거같은데?*/    
 	</select>
 	
+	<select id="userMyPage" parameterType="String" resultMap="UserVo">
+		SELECT USER_ID,USER_NAME,USER_PHONE,USER_ADDRESS_ZIP_CODE,USER_ADDRESS_ROAD_NAME,USER_ADDRESS_DETAILED,USER_EMAIL 
+		FROM NOTICES_USER WHERE USER_ID = #{userId}
+	/* 마이페이지 정보 출력 */
+	</select>	
 	
-	
+	<update id="userUpdate" parameterType="com.stock.domain.UserVo">
+		update notices_user 
+		set user_name = #{userNm},user_phone = #{userPhone} ,user_address_zip_code=#{addressZipCode}, user_address_road_name = #{addressRoadName}, user_address_detailed = #{addressDetailed}, user_email = #{userEmail} 
+		where user_id = #{userId}
+	</update>
 </mapper>

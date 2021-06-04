@@ -54,7 +54,6 @@
 
 <body>
 
-    <div id="wrapper">
 
 	<!-- 네비게이션바 -->
 	<%@include file="../common/navbar.jsp" %>

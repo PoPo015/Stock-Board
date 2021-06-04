@@ -12,6 +12,9 @@ public interface UserMapper {
 	//user 로그인
 	public int userLogin(UserVo vo);
 	//db 패스워드 암호화된거 가져오기
-	public String userPwCheck(String userPw);
-	
+	public String userPwCheck(String userId);
+	//user 마이페이지
+	public UserVo userMyPage(String userId);
+	//user 업데이트
+	public void userUpdate(UserVo vo);
 }

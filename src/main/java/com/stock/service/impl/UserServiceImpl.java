@@ -80,4 +80,32 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
+	public UserVo userMyPage(String userId) {
+
+		return mapper.userMyPage(userId);
+	}
+
+	@Override
+	public String userUpdate(UserVo vo, String userId) {
+		
+		
+		if(vo.getUserId().equals(userId)) {
+			log.info("세션계정과 Id계정이 일치함");
+			try {
+				mapper.userUpdate(vo);												//비정상적인값 입력시 예외처리
+			}catch (Exception e) {
+				e.printStackTrace();
+				return "정보수정실패";
+			}
+			return "정보수정성공";
+		}else {
+			log.info("세션계정과 Id계정이 틀림");
+			return "정보수정실패";
+		}
+			
+		
+		
+	}
+
 }

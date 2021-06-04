@@ -12,5 +12,9 @@ public interface UserService {
 	public void userCreate(UserVo vo,HttpServletRequest request);
 	//user 로그인
 	public String userLogin(UserVo vo);
-
+	//user 마이페이지
+	public UserVo userMyPage(String userId);
+	//user 업데이트
+	public String userUpdate(UserVo vo, String userId);
+	
 }

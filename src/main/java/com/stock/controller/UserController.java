@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.stock.domain.UserVo;
 import com.stock.service.UserService;
-import com.stock.util.GetClientIp;
 
 import lombok.extern.log4j.Log4j;
 
@@ -30,7 +28,7 @@ public class UserController {
 	@Autowired
 	private UserService service;
 	
-	
+	//로그인 페이지
 	@GetMapping("/login")
 	public String login() {
 		
@@ -40,6 +38,7 @@ public class UserController {
 		
 	}
 	
+	//로그인 Post
 	@PostMapping("/login")
 	public ModelAndView loginPost(UserVo vo, HttpSession session) throws IOException {
 
@@ -66,7 +65,59 @@ public class UserController {
 		
 	}
 	
+	//로그아웃
+	@GetMapping("/logout")
+	public String userLogout(HttpSession session) {
+		log.info("계정 로그아웃합니다");
+		session.invalidate();
 	
+		return "redirect:/notices/list";
+	}
+	
+	//마이페이지
+	@GetMapping("/myPage")
+	public ModelAndView userMyPage(HttpSession session) {
+
+		ModelAndView mv = new ModelAndView();
+		UserVo vo = service.userMyPage((String)session.getAttribute("userId"));
+		
+		log.info("vo--" + vo.getUserId());
+		
+		mv.addObject("userId", vo.getUserId());
+		mv.addObject("userNm", vo.getUserNm());
+		mv.addObject("userEmail", vo.getUserEmail());
+		mv.addObject("userPhone", vo.getUserPhone());
+		mv.addObject("addressZipCode", vo.getAddressZipCode());
+		mv.addObject("addressRoadName", vo.getAddressRoadName());
+		mv.addObject("addressDetailed", vo.getAddressDetailed());
+		
+		service.userMyPage((String)session.getAttribute("userId"));
+		
+		mv.setViewName("/user/userMyPage");
+		
+		return mv;
+	}
+	
+	@PostMapping("/myPage")
+	public void userMyPage(UserVo vo, HttpSession session, HttpServletResponse response) throws IOException {
+		
+		log.info("vo----" + vo);
+		String userId = (String)session.getAttribute("userId");
+
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		if(service.userUpdate(vo, userId).equals("정보수정성공")) {
+			log.info("정보수정 성공~");
+			out.println("<script>alert('정보수정 성공'); location.href='/user/myPage';</script>");
+			out.flush();
+		}else {
+			out.println("<script>alert('정보수정 실패'); location.href='/user/myPage';</script>");
+			out.flush();
+		}
+	}
+	
+	//계정생성 페이지
 	@GetMapping("/create")
 	public String userCreate() {
 		
@@ -76,7 +127,7 @@ public class UserController {
 		
 	}
 	
-	//유저 생성
+	//계정 생성Post
 	@PostMapping("/create")
 	public void userCreatePage(UserVo vo, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
@@ -95,6 +146,20 @@ public class UserController {
 
 	}
 
+	@GetMapping("/pwChange")
+	public String userPwChange() {
+		
+		log.info("비밀번호 변경페이지");
+		return "/user/userPwChange";
+	}
+	
+	@GetMapping("/withdrawal")
+	public String userWithdrawal() {
+		log.info("회원탈퇴 페이지");
+		return "/user/userWithdrawal";
+	}
+	
+	
 	//id,email중복체크
 	@ResponseBody
 	@PostMapping("/createIdAndEmailCheck")
