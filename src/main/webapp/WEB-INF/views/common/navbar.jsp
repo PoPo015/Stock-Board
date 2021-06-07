@@ -25,7 +25,7 @@ function googleSearch(){
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+                <a class="navbar-brand" href="index.html">PoPo</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -226,8 +226,7 @@ function googleSearch(){
                     </a>
                     
                     
-                    <c:set var="userId" value="${userId}" />
-                    
+<%--                     <c:set var="userId" value="${userId}" /> --%>
                     <c:choose>
                     
                     	<c:when test="${empty userId}">
@@ -265,7 +264,7 @@ function googleSearch(){
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="구글 검색" id="googleSearch">
+                                <input type="text" class="form-control" placeholder="구글 검색" id="googleSearch" value="${Id}">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" onclick="googleSearch()">
                                     <i class="fa fa-search"></i>

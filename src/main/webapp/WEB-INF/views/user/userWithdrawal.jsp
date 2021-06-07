@@ -27,75 +27,26 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">마이페이지</h1>
+                    <h1 class="page-header">회원탈퇴</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-					<!-- 회원가입 정보 -->
-					<form class="form-horizontal" name="frm" id="frm" action="/user/myPage" method="post">
-					     <div class="form-group">
-					       <label for="userId" class="col-sm-3 control-label">
-					       	아이디</label><strong id="idAjaxCheck" style="color:red"></strong>
-					       <div class="col-sm-7">
-					         <input type="text" class="form-control" id="userId" name="userId" maxlength="12" value="${userId}" readonly>
-					       </div>
-					     </div>
-
-					     <div class="form-group">
-					       <label for="userNm" class="col-sm-3 control-label">
-					   		     이름</label>
-					       <div class="col-sm-7">
-					         <input type="text" class="form-control" id="userNm" name="userNm" maxlength="20" value="${userNm}">
-					       </div>
-					     </div>
-
-					     <div class="form-group">
-					       <label for="userEmail" class="col-sm-3 control-label">
-					     		이메일</label><strong id="emailAjaxCheck" style="color:red"></strong>
-					       <div class="col-sm-7">
-					         <input type="email" class="form-control" id="userEmail" name="userEmail" value="${userEmail}">
-					       </div>
-					     </div>
-
-					     <div class="form-group">
-					       <label for="userPhone" class="col-sm-3 control-label">연락처</label>
-					       <div class="col-sm-7">
-					         <input type="text" class="read form-control" id="userPhone" name="userPhone" style="background: white" value="${userPhone}">
-					       </div>
-					     </div>
-					   <!-- id,name공백 -->
-					     <div class="form-group">
-					       <label for="" class="col-sm-3 control-label">주소</label>
-					       <div class="col-sm-7">
-					         <input type="text" class="form-control" id="addressZipCode" name="addressZipCode" placeholder="우편 번호" readonly style="width:30%; display:inline; background: white" value="${addressZipCode}">
-					         <button type="button" id="addressFind">우편번호 찾기</button>
-      					     <input type="text" class="form-control" id="addressRoadName" name="addressRoadName" placeholder="기본주소" readonly style="background: white" value="${addressRoadName}">
-					      	 <input type="text" class="form-control" placeholder="동" id="addressSimple" readonly style="width:30%; display:inline; background: white" >
-    					     <input type="text" class="form-control" id="addressDetailed" name="addressDetailed" placeholder="상세주소" style="width:65%; display:inline" value="${addressDetailed}">
-					       </div>
-					     </div>
-							
-														
-					     <div class="form-group">
-					       <div class="col-sm-offset-2 col-sm-10">
-					         <button type="button" class="btn btn-primary" id="createUser">정보 수정</button>
-					         <button type="button" class="btn btn-default">취소</button>
-					       </div>
-					     </div>
-					   </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-						<button class="btn btn-primary" onclick="location.href='/user/pwChange'" style="display:block; width:100%">비밀번호 변경</button>
-						<button class="btn btn-danger" onclick="location.href='/user/withdrawal'" style="display:block; width:100%;">회원 탈퇴</button>
+							<h1 style="text-align: center">회원 탈퇴시 아래의 조치가 취해집니다.</h1>
+								<ul>
+									<li>회원 탈퇴 일로부터 계정과 닉네임을 포함한 계정 정보(아이디/이메일/닉네임)는 '개인 정보 보호 정책'에 따라 7일간 보관(잠김) 되며, 7일이 경과된 후에는 모든 개인 정보는 완전히 삭제되며 더 이상 복구할 수 없게 됩니다
+									<li>작성된 게시물은 삭제되지 않으며, 익명처리 후 PoPo로 소유권이 귀속됩니다.
+									<li>게시물 삭제가 필요한 경우에는 관리자(kst005109@naver.com)로 문의해 주시기 바랍니다.
+								</ul>
+								<form>
+								<input type="password" class="form-control" id="userPw" name="userPw" placeholder="탈퇴를 원할시 ,현재패스워드를 입력해주세요."><br><br>
+								</form>
+						<button class="btn btn-primary" onclick="location.href='/user/myPage'" style="display:block; width:100%">아니오</button>
+						<button class="btn btn-danger" onclick="userWithdrawl()" style="display:block; width:100%;">예, 탈퇴하겠습니다.</button>
 
                         </div>
                     </div>
@@ -109,6 +60,32 @@
 
     </div>
     <!-- /#wrapper -->
+    
+    
+<script>
+function userWithdrawl(){
+	
+	
+	if(confirm("정말 회원 탈퇴 하시겠습니까?")){
+		let userPw = $("#userPw").val();
+		console.log("진짜눌러버렸다.." + userPw);
+		
+		$.ajax({
+			url : "/user/withdrawal",
+			type: "post",
+			async: false,						//동기방식 여기부터 해야함. (동기 = 이작업이 끝나야 다른작업가능  ,비동기 = 백으로 돌려서 할수있음)
+			success: function(data){
+				console.log("성공");				
+			},
+			error: function(error){
+				console.log("실패");
+			}
+		})
+	}
+}
+</script>
+    
+    
 </body>
 
 </html>

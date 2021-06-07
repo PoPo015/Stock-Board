@@ -61,20 +61,22 @@
 
 	<div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default panel-margin-10">
+        <form id="frm" action="/user/pwChange" method="post">
             <div class="panel-body panel-body-content text-center">
                 <p class="lead">변경하실 비밀번호를 입력해 주세요.</p>
                 <div class="form-group">
-                    <input type="password" name="password" class="form-control form-control-inline text-center" placeholder="현재 비밀번호">
+                    <input type="password" name="userPw" id="userPw" class="form-control form-control-inline text-center" placeholder="현재 비밀번호">
                 </div>
                 <div class="form-group">
-                    <input type="password" name="newPassword" class="form-control form-control-inline text-center" placeholder="새 비밀번호">
+                    <input type="password" name="newPassword" id="password" class="form-control form-control-inline text-center" placeholder="새 비밀번호">
                 </div>
                 <div class="form-group">
                     <input type="password" name="passwordConfirm" class="form-control form-control-inline text-center" placeholder="새 비밀번호 확인">
                 </div>
-                <button type="submit" class="btn btn-primary">비밀번호 변경</button> 
+                <button type="button" class="btn btn-primary" onclick="pwChange()">비밀번호 변경</button> 
                 <a href="/user/myPage" class="btn btn-default">취소</a>
             </div>
+       </form>
         </div>
     </div>
 
@@ -85,6 +87,38 @@
 
     </div>
     <!-- /#wrapper -->
+
+<script>
+var regExpPw = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; // 특수문자 / 문자 / 숫자 포함 형태의 8~15자리 이내의 암호 정규식
+
+	//pw 정규식검증
+	$("#userPw").change(function() {
+		console.log("pw 변경사항있음.");
+		if(!regExpPw.test($("#userPw").val())){
+			$("#userPw").focus();
+			alert("비밀번호를 확인해주세요");
+			return false;
+		}
+	});
+
+	//pwcheck 확인
+	$("#passwordConfirm").change(function() {
+		console.log("pw체크 변경사항있음.");
+		if($("#newPassword").val() !== $("#passwordConfirm").val()){
+			$("#passwordConfirm").focus();
+			alert("입력한 패스워드가 다릅니다. 확인해주세요");
+			return false;
+		}
+	});
+	
+	
+	//공백 검증 코드 필요
+function pwChange(){
+
+		$("#frm").submit();
+}
+
+</script>
 
 
 </body>

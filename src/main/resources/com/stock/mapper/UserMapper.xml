@@ -55,5 +55,13 @@
 		update notices_user 
 		set user_name = #{userNm},user_phone = #{userPhone} ,user_address_zip_code=#{addressZipCode}, user_address_road_name = #{addressRoadName}, user_address_detailed = #{addressDetailed}, user_email = #{userEmail} 
 		where user_id = #{userId}
+	/* 마이페이지 정보수정 */
+	</update>
+	
+	<update id="userPwChange" parameterType="String">
+		update notices_user 
+		set user_pw = #{newUserPw} 
+		where user_id = #{userId}
+		/* 비밀번호 수정 */
 	</update>
 </mapper>

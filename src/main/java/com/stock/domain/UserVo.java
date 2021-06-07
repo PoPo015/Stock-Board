@@ -7,6 +7,7 @@ public class UserVo {
 	
 	private String userId;				//아이디
 	private String userPw;				//패스워드
+	private String newPassword;
 	private String userNm;				//이름
 	private	String userEmail;			//이메일
  	private String userPhone;			//연락처

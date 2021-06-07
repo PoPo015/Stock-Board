@@ -1,5 +1,7 @@
 package com.stock.mapper;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.stock.domain.UserVo;
 
 public interface UserMapper {
@@ -17,4 +19,6 @@ public interface UserMapper {
 	public UserVo userMyPage(String userId);
 	//user 업데이트
 	public void userUpdate(UserVo vo);
+	//user pw 변경
+	public void userPwChange(@Param("userId")String userId,@Param("newUserPw")String userPw);
 }

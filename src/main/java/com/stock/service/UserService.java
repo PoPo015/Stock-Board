@@ -17,4 +17,5 @@ public interface UserService {
 	//user 업데이트
 	public String userUpdate(UserVo vo, String userId);
 	
+	public String userPwChange(UserVo vo);
 }

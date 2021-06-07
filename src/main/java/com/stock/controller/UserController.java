@@ -45,8 +45,8 @@ public class UserController {
 		log.info("로그인시도합니다 Controller----" + vo);
 		ModelAndView mv = new ModelAndView();
 		
-		
 		String result = service.userLogin(vo);
+		
 		
 		if(result.equals("로그인 성공")) {
 			log.info("로그인성공");
@@ -56,11 +56,11 @@ public class UserController {
 			return mv;
 		}else {
 			log.info("로그인 실패");
-			mv.addObject("userId", vo.getUserId());
-			mv.addObject("userPw", vo.getUserPw());
+			mv.addObject("Id", vo.getUserId());
+			mv.addObject("Pw", vo.getUserPw());
 			mv.addObject("err", "로그인에 실패했습니다 \\n 정보를 확인해주세요.");
 			mv.setViewName("/user/userLogin");
-		return mv;
+			return mv;
 		}
 		
 	}
@@ -97,6 +97,39 @@ public class UserController {
 		
 		return mv;
 	}
+	
+	@GetMapping("/pwChange")
+	public String userPwChange() {
+		
+		log.info("비밀번호 변경페이지");
+		return "/user/userPwChange";
+	}
+	
+	@PostMapping("/pwChange")
+	public void userPwChange(UserVo vo, HttpSession session, HttpServletResponse response) throws IOException {
+		
+		log.info("비밀번호변경-*-- vo" + vo);
+		vo.setUserId((String)session.getAttribute("userId"));
+		
+		String pwChk = service.userPwChange(vo);
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		log.info(pwChk);
+		
+		if(pwChk.equals("비밀번호 수정 성공")) {
+			out.println("<script>alert('비밀번호 수정 성공'); location.href='/user/myPage';</script>");
+			out.flush();
+		}else if(pwChk.equals("비밀번호 수정 실패")) {
+			out.println("<script>alert('비밀번호 수정 실패'); location.href='/user/pwChange';</script>");
+			out.flush();
+		}else if(pwChk.equals("비밀번호 동일 실패")) {
+			out.println("<script>alert('비밀번호가 바꾸기전과 동일합니다. \\n 바꾸시려는 비밀번호를 확인해주세요'); location.href='/user/pwChange';</script>");
+			out.flush();
+		}
+		
+	}
+	
 	
 	@PostMapping("/myPage")
 	public void userMyPage(UserVo vo, HttpSession session, HttpServletResponse response) throws IOException {
@@ -146,17 +179,19 @@ public class UserController {
 
 	}
 
-	@GetMapping("/pwChange")
-	public String userPwChange() {
-		
-		log.info("비밀번호 변경페이지");
-		return "/user/userPwChange";
-	}
 	
 	@GetMapping("/withdrawal")
 	public String userWithdrawal() {
 		log.info("회원탈퇴 페이지");
 		return "/user/userWithdrawal";
+	}
+	
+	@ResponseBody
+	@PostMapping("/withdrawal")
+	public void userWithdrawal2() {
+	
+		log.info("회원탈퇴 페이지 --- post");
+
 	}
 	
 	

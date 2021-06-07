@@ -108,4 +108,39 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public String userPwChange(UserVo vo) {
+		
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
+		String hashPwCheck = mapper.userPwCheck(vo.getUserId());						//해당 user hash 비밀번호를 가져옴
+		String hashPassword = BCrypt.hashpw(vo.getNewPassword(), BCrypt.gensalt());		//패스워드 암호화
+
+		log.info("서비스 vo--" + vo);
+		
+		log.info("hashPw---" + hashPwCheck);
+		log.info("hashnew---" + hashPassword);
+		if(Pattern.matches(regPw, vo.getUserPw()) && Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null) {
+			
+			log.info("pwcheck---" + hashPwCheck);
+			log.info("BcrCheck--" + BCrypt.checkpw(vo.getUserPw(), hashPwCheck));	
+			
+			if(BCrypt.checkpw(vo.getNewPassword(), hashPwCheck)) {
+				log.info("현재 비밀번호와 동일합니다. 다른비밀번호로 설정하세요");
+				return "비밀번호 동일 실패";
+			}
+			
+			if(BCrypt.checkpw(vo.getUserPw(), hashPwCheck)) {							//아이디와 pw가 일치시
+					log.info("아이디와 pw가 일치합니다. 비밀번호 수정 합니다.");
+					mapper.userPwChange(vo.getUserId(), hashPassword);
+					return "비밀번호 수정 성공";
+			}else {
+					log.info("아이디와 pw가 일치하지않습니다.비밀번호 수정 실패.");
+					return "비밀번호 수정 실패";
+			}
+		}
+		log.info("비밀번호가 null이거나 , 정규식패턴에 맞지않음");
+		return "비밀번호 수정 실패";
+
+	}
+
 }
