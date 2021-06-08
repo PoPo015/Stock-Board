@@ -205,10 +205,34 @@ user_address_detailed varchar2(100),
 user_email varchar2(100),
 user_ip varchar2(100)
 )
+ALTER TABLE notices_user ADD CONSTRAINT pk_userid PRIMARY KEY (user_id)   -- PK를 생성한다.
+
 		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = 'abc'
         
     select count(*) from notices_user where user_id='test1234' and user_pw= '$2a$10$hOg3EOuvOh3Uq1q7k/POOuQYKHgV7u75urB0Qh3iUcRCYzijREgXC'
     
     		select user_id,user_name,user_phone,user_address_zip_code,user_address_road_name,user_address_detailed,user_email from notices_user where user_id= 'test1234'
             update notices_user set user_name ='123' ,user_phone ='123' ,user_address_zip_code= , user_address_road_name = ,user_address_detailed = ,user_email =  where user_id = 
-            
+----회원탈퇴 테이블----
+create table notcies_user_withdrawl(
+user_id varchar2(30),
+user_reg_withdrawal date default to_char(sysdate,'YYYYMMDD'),
+CONSTRAINT withdrawl_pk_userid PRIMARY KEY(user_id),
+CONSTRAINT fk_userid FOREIGN KEY(user_id) REFERENCES notices_user(user_id) on delete cascade
+)
+
+select user_id as userId ,user_reg_withdrawal as userRegWithdrawal from notcies_user_withdrawl where user_id='test1234'
+
+insert into notcies_user_withdrawl(user_id)
+values('test1234')
+
+delete from notcies_user_withdrawl where user_id = 'test1234'
+
+select sysdate from dual;
+select to_char(sysdate +7,'YYYYMMDD') FROM DUAL
+
+select user_reg_withdrawal from notcies_user_withdrawl
+where user_reg_withdrawal between to_char(sysdate-1,'YYYYMMDD') and to_char(sysdate+7,'YYYYMMDD')
+
+select user_id as userID from notcies_user_withdrawl
+where user_reg_withdrawal <= to_char(sysdate-7,'YYYYMMDD')

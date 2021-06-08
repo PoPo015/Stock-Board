@@ -36,15 +36,14 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-							<h1 style="text-align: center">회원 탈퇴시 아래의 조치가 취해집니다.</h1>
+							<h1 style="text-align: center">회원탈퇴 예약된 계정입니다.</h1>
 								<ul>
-									<li>회원 탈퇴 일로부터 계정과 닉네임을 포함한 계정 정보(아이디/이메일/닉네임)는 '개인 정보 보호 정책'에 따라 7일간 보관(잠김) 되며, 7일이 경과된 후에는 모든 개인 정보는 완전히 삭제되며 더 이상 복구할 수 없게 됩니다
-									<li>작성된 게시물은 삭제되지 않으며, 익명처리 후 PoPo로 소유권이 귀속됩니다.
-									<li>게시물 삭제가 필요한 경우에는 관리자(kst005109@naver.com)로 문의해 주시기 바랍니다.
+									<U><li><fmt:formatDate value="${userRegWithdrawal}" pattern="MM월 dd일"/>에 회원탈퇴됩니다.</li></U>
+									<li>회원 탈퇴를 철회 하시려면 현재 비밀번호를 입력해주세요.</li>
 								</ul>
-						<input type="password" class="form-control" id="userPw" name="userPw" placeholder="탈퇴를 원할시 ,현재패스워드를 입력해주세요."><br><br>
-						<button class="btn btn-primary" onclick="location.href='/user/myPage'" style="display:block; width:100%">아니오</button>
-						<button class="btn btn-danger" onclick="userWithdrawl()" style="display:block; width:100%;">예, 탈퇴하겠습니다.</button>
+						<input type="password" class="form-control" id="userPw" name="userPw" placeholder="탈퇴 철회시 ,현재패스워드를 입력해주세요."><br><br>
+						<button class="btn btn-primary" onclick="location.href='/notices/list'" style="display:block; width:100%">아니오</button>
+						<button class="btn btn-danger" onclick="userWithdrawl()" style="display:block; width:100%;">탈퇴를 철회하겠습니다.</button>
 
                         </div>
                     </div>
@@ -63,10 +62,10 @@
 <script>
 function userWithdrawl(){
 	
-	if(confirm("정말 회원 탈퇴 하시겠습니까?")){
+	if(confirm("정말 회원탈퇴를 철회하시겠습니까?")){
 		
 		$.ajax({
-			url : "/user/withdrawal",
+			url : "/user/withdrawalCancel",
 			type: "post",
 			contentType : "application/json; charset=utf-8",
 			async: false,						//동기방식  (동기 = 이작업이 끝나야 다른작업가능  ,비동기 = 백으로 돌려서 할수있음)
@@ -74,17 +73,18 @@ function userWithdrawl(){
 				"userPw": $("#userPw").val()
 			}),
 			success: function(data){
-				console.log("회원탈퇴 성공");
+				console.log("회원탈퇴철회 성공");
+				console.log(data);
 				
 				if(data === "success"){
-					alert("회원탈퇴 성공");
-					location.href = "/notices/list";
+					alert("회원탈퇴 철회 성공");
+					location.href = "/user/myPage";
 				}else{
-					alert("패스워드를 확인해주세요");
+					alert("비밀번호를 확인해주세요");
 				}
 			},
 			error: function(error){
-				console.log("회원탈퇴 실패");
+				console.log("회원탈퇴철회 실패");
 			}
 		})
 	}

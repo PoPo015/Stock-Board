@@ -16,6 +16,10 @@ public interface UserService {
 	public UserVo userMyPage(String userId);
 	//user 업데이트
 	public String userUpdate(UserVo vo, String userId);
-	
+	//user 비밀번호 변경
 	public String userPwChange(UserVo vo);
+	//user 회원탈퇴
+	public String realUserWithdrawal(UserVo vo); 
+	//user 회원탈퇴 철회
+	public String userWithrawalCancel(UserVo vo);
 }

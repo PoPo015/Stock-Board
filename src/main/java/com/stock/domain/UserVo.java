@@ -1,5 +1,7 @@
 package com.stock.domain;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -16,6 +18,6 @@ public class UserVo {
 	private String addressDetailed;		//상세주소
 	private String userIp;				//유저 ip
 
-	private boolean certification; //서버에서 검증할 변수
+	private Date userRegWithdrawal; 	//회원탈퇴날짜
 	
 }

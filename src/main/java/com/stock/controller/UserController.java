@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,7 +68,7 @@ public class UserController {
 	
 	//로그아웃
 	@GetMapping("/logout")
-	public String userLogout(HttpSession session) {
+	public static String userLogout(HttpSession session) {
 		log.info("계정 로그아웃합니다");
 		session.invalidate();
 	
@@ -80,24 +81,29 @@ public class UserController {
 
 		ModelAndView mv = new ModelAndView();
 		UserVo vo = service.userMyPage((String)session.getAttribute("userId"));
-		
-		log.info("vo--" + vo.getUserId());
-		
-		mv.addObject("userId", vo.getUserId());
-		mv.addObject("userNm", vo.getUserNm());
-		mv.addObject("userEmail", vo.getUserEmail());
-		mv.addObject("userPhone", vo.getUserPhone());
-		mv.addObject("addressZipCode", vo.getAddressZipCode());
-		mv.addObject("addressRoadName", vo.getAddressRoadName());
-		mv.addObject("addressDetailed", vo.getAddressDetailed());
-		
-		service.userMyPage((String)session.getAttribute("userId"));
-		
-		mv.setViewName("/user/userMyPage");
-		
-		return mv;
+
+		if(vo.getUserRegWithdrawal() != null) {
+			log.info("회원탈퇴계정입니다.");
+			
+			mv.addObject("userId", vo.getUserId());
+			mv.addObject("userRegWithdrawal", vo.getUserRegWithdrawal());
+			mv.setViewName("/user/userWithdrawalCancel");
+			return mv;
+		}else {
+			log.info("vo--" + vo);
+			mv.addObject("userId", vo.getUserId());
+			mv.addObject("userNm", vo.getUserNm());
+			mv.addObject("userEmail", vo.getUserEmail());
+			mv.addObject("userPhone", vo.getUserPhone());
+			mv.addObject("addressZipCode", vo.getAddressZipCode());
+			mv.addObject("addressRoadName", vo.getAddressRoadName());
+			mv.addObject("addressDetailed", vo.getAddressDetailed());
+			mv.setViewName("/user/userMyPage");
+			return mv;
+		}
 	}
-	
+		
+	//비밀번호 변경 페이지
 	@GetMapping("/pwChange")
 	public String userPwChange() {
 		
@@ -105,6 +111,7 @@ public class UserController {
 		return "/user/userPwChange";
 	}
 	
+	//비밀번호 변경 post
 	@PostMapping("/pwChange")
 	public void userPwChange(UserVo vo, HttpSession session, HttpServletResponse response) throws IOException {
 		
@@ -130,7 +137,7 @@ public class UserController {
 		
 	}
 	
-	
+	//마이페이지 post
 	@PostMapping("/myPage")
 	public void userMyPage(UserVo vo, HttpSession session, HttpServletResponse response) throws IOException {
 		
@@ -167,33 +174,41 @@ public class UserController {
 		log.info("테스트---" + vo);
 		
 		service.userCreate(vo, request); //유저회원가입정보중 공백있으면 400에러발생
-
 		
-		//PrintWrtier에서 한글 인코딩이 깨지는 경우 셋팅
-		//반드시 PrintWriter 객체 선언하기 전에 셋팅해줘야 함
-		//response.setCharacterEncoding("utf-8");
-		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		out.println("<script>alert('정상적으로 회원가입 되었습니다.\\n로그인 페이지로 이동합니다'); location.href='/user/login'</script>");
+		response.setContentType("text/html; charset=UTF-8");																//PrintWrtier에서 한글 인코딩이 깨지는 경우 셋팅
+		PrintWriter out = response.getWriter();																				//반드시 PrintWriter 객체 선언하기 전에 셋팅해줘야 함
+		out.println("<script>alert('정상적으로 회원가입 되었습니다.\\n로그인 페이지로 이동합니다'); location.href='/user/login'</script>");	//response.setCharacterEncoding("utf-8");
 		out.flush();	// 현재 출력 버퍼에 저장되어 있는 내용을 웹 브라우저에 전송하고 비운다.
 
 	}
 
-	
+	//회원탈퇴
 	@GetMapping("/withdrawal")
 	public String userWithdrawal() {
 		log.info("회원탈퇴 페이지");
 		return "/user/userWithdrawal";
 	}
 	
+	//회원탈퇴 post
 	@ResponseBody
 	@PostMapping("/withdrawal")
-	public void userWithdrawal2() {
+	public String realUserWithdrawal(@RequestBody UserVo vo, HttpSession session) {
 	
-		log.info("회원탈퇴 페이지 --- post");
+		log.info("회원탈퇴 vo ----" + vo);
+		vo.setUserId((String)session.getAttribute("userId"));
+		return service.realUserWithdrawal(vo);
 
 	}
 	
+	@ResponseBody
+	@PostMapping("/withdrawalCancel")
+	public String userWithrawalCancel(@RequestBody UserVo vo, HttpSession session) {
+		
+		log.info("회원탈퇴 철회 vo----"  + vo );
+		vo.setUserId((String)session.getAttribute("userId"));
+		
+		return service.userWithrawalCancel(vo);
+	}
 	
 	//id,email중복체크
 	@ResponseBody

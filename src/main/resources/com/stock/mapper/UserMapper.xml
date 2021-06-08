@@ -59,9 +59,38 @@
 	</update>
 	
 	<update id="userPwChange" parameterType="String">
-		update notices_user 
-		set user_pw = #{newUserPw} 
-		where user_id = #{userId}
-		/* 비밀번호 수정 */
+		UPDATE NOTICES_USER 
+		SET USER_PW = #{newUserPw} 
+		WHERE USER_ID = #{userId}
+	/* 비밀번호 수정 */
 	</update>
+	
+	<insert id="realUserWithdrawal" parameterType="String">
+	INSERT INTO NOTCIES_USER_WITHDRAWL(USER_ID)
+	VALUES(#{userId})
+	/* 회원탈퇴 등록*/
+	</insert>
+	
+	<select id="userWithdrawalReg" parameterType="String" resultType="com.stock.domain.UserVo">
+	SELECT USER_ID AS USERID ,USER_REG_WITHDRAWAL AS USERREGWITHDRAWAL FROM NOTCIES_USER_WITHDRAWL WHERE USER_ID=#{userId}
+	/* 회원탈퇴 날짜 */
+	</select>
+	
+	<delete id="userWithrawalCancel" parameterType="String">
+	DELETE FROM NOTCIES_USER_WITHDRAWL WHERE USER_ID = #{userId}
+	/* 회원탈퇴 철회 */
+	</delete>
+	
+	<select id="userWithrawalList" resultType="com.stock.domain.UserVo">
+	<![CDATA[
+	SELECT USER_ID AS USERID FROM NOTCIES_USER_WITHDRAWL
+	WHERE USER_REG_WITHDRAWAL <= TO_CHAR(SYSDATE-7,'YYYYMMDD')
+	]]>
+	/* 현재날짜로부터 7일 전의 데이터를 가져옴 */
+	</select>
+	
+	<delete id="userRemove" parameterType="String">
+		DELETE FROM notices_user WHERE USER_ID = #{userId}
+	</delete>
+	
 </mapper>

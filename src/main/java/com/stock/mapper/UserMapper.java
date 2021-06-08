@@ -1,5 +1,7 @@
 package com.stock.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.stock.domain.UserVo;
@@ -21,4 +23,15 @@ public interface UserMapper {
 	public void userUpdate(UserVo vo);
 	//user pw 변경
 	public void userPwChange(@Param("userId")String userId,@Param("newUserPw")String userPw);
+	//user 회원탈퇴
+	public void realUserWithdrawal(String userId); 
+	//user 회원탈퇴날짜
+	public UserVo userWithdrawalReg(String userId);
+	//user 회원탈퇴 철회
+	public void userWithrawalCancel(String userId);
+	//user 회원탈퇴 7일지난 리스트
+	public List<UserVo> userWithrawalList();
+	
+	//user 회원탈퇴처리
+	public void userRemove(String userId);
 }

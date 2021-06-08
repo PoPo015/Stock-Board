@@ -113,11 +113,13 @@ public class NoticesServiceImpl implements NoticesService {
 	public List<NoticesVo> getList(Criteria cri) {
 		if(cri.getKeyword() != null && cri.getType() != null) {
 			log.info("키워드있다~!!!!!~~"+cri);
-			log.info("검색 페이징 리턴---" + mapper.serach(cri));
+//			log.info("검색 페이징 리턴---" + mapper.serach(cri));
+			log.info("검색 페이징 리턴---");
 			return mapper.serach(cri);
 		} else if((cri.getKeyword() == null && cri.getType() == null)) {
 			log.info("키워드없음~~~"+cri);
-			log.info("일반페이징 리턴---" + mapper.getList(cri));
+//			log.info("일반페이징 리턴---" + mapper.getList(cri));
+			log.info("일반페이징 리턴---");
 			return mapper.getList(cri);
 		}
 		return null;

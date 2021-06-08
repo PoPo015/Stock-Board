@@ -3,7 +3,6 @@ package com.stock.service.impl;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +82,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVo userMyPage(String userId) {
 
-		return mapper.userMyPage(userId);
+		UserVo vo = mapper.userWithdrawalReg(userId);								//회원탈퇴 했는지 확인
+
+		if(vo != null) {
+			log.info("vo (회원탈퇴값이 있어용)");
+			return vo;
+		}else {
+			log.info("회원탈퇴값이 없어요");
+			return mapper.userMyPage(userId);
+		}
+		
+		
 	}
 
 	@Override
@@ -119,7 +128,7 @@ public class UserServiceImpl implements UserService {
 		
 		log.info("hashPw---" + hashPwCheck);
 		log.info("hashnew---" + hashPassword);
-		if(Pattern.matches(regPw, vo.getUserPw()) && Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null) {
+		if(Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null) {
 			
 			log.info("pwcheck---" + hashPwCheck);
 			log.info("BcrCheck--" + BCrypt.checkpw(vo.getUserPw(), hashPwCheck));	
@@ -141,6 +150,46 @@ public class UserServiceImpl implements UserService {
 		log.info("비밀번호가 null이거나 , 정규식패턴에 맞지않음");
 		return "비밀번호 수정 실패";
 
+	}
+
+	@Override
+	public String realUserWithdrawal(UserVo vo) {
+
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
+		String hashPwCheck = mapper.userPwCheck(vo.getUserId());						//해당 user hash 비밀번호를 가져옴
+		
+		if(Pattern.matches(regPw, vo.getUserPw())) {
+			
+			if(BCrypt.checkpw(vo.getUserPw(), hashPwCheck)) {							//아이디와 pw가 일치시
+				log.info("아이디와 pw가 일치합니다. 회원탈퇴 합니다.");
+				mapper.realUserWithdrawal(vo.getUserId());
+				return "success";
+			}
+			
+		}
+		log.info("아이디와 pw가 일치하지않습니다.");
+		return "error";
+	}
+
+	@Override
+	public String userWithrawalCancel(UserVo vo) {
+
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
+		String hashPwCheck = mapper.userPwCheck(vo.getUserId());						//해당 user hash 비밀번호를 가져옴
+		
+		log.info("회원탈퇴 철회---" + vo);
+
+		if(Pattern.matches(regPw, vo.getUserPw())) {
+			
+			if(BCrypt.checkpw(vo.getUserPw(), hashPwCheck)) {							//아이디와 pw가 일치시
+				log.info("아이디와 pw가 일치합니다. 회원탈퇴를 철회 합니다.");
+				mapper.userWithrawalCancel(vo.getUserId());
+				return "success";
+			}
+			
+		}
+		return "error";
+		
 	}
 
 }
