@@ -77,11 +77,11 @@ public class NoticesController {
 	}
 	//공지사항 삭제
 	@GetMapping("/delete/{bno}")
-	public String noticesDelete(@PathVariable("bno") int bno, Model model) {
+	public String noticesDelete(@PathVariable("bno") int bno, HttpSession session, Model model) {
 		
 		log.info("삭제번호-----" + bno);
 		
-		service.delete(bno);
+		service.delete(bno,session);
 		
 		return "redirect:/notices/list";
 
@@ -100,8 +100,12 @@ public class NoticesController {
 	
 	//공지사항 수정
 	@PostMapping("/modify")
-	public String noticesModify2(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno, Model model) {
-	
+	public String noticesModify2(NoticesVo vo, HttpSession session, @RequestParam(required = false)List<Integer> fileBno, Model model) {
+		//비정상적인 수정접근
+		if(!vo.getWriter().equals(session.getAttribute("userId"))) {
+			log.info("비정상적인 수정. 수정하지않습니다.");
+		}
+
 		log.info("수정----" + vo);
 		
 		service.modify(vo,fileBno);
@@ -112,8 +116,6 @@ public class NoticesController {
 	//공지사항 댓글 등록
 	@PostMapping(value ="/reply", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo) {
-		
-
 		
 		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);

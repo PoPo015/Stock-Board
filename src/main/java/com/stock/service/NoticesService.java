@@ -23,10 +23,10 @@ public interface NoticesService {
 	public NoticesVo details(int bno);
 	
 	//공지사항 삭제
-	public void delete(int bno);
+	public void delete(int bno,HttpSession session);
 	
 	//공지사항 수정
-	public void modify(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno);
+	public void modify(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno);
 
 	//일반 페이징list
 	public List<NoticesVo> getList(Criteria cri);

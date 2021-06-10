@@ -257,20 +257,23 @@ var reply = function() {
 			for(let i in replyList){
 // 				console.log(replyList[i].rno);
 				let encodeReply = encodeURI(replyList[i].reply);
-// 				console.log(dataa);
 				
 				
 				replygetList += "<div style='border: solid 1px' data-replyId="+replyList[i].rno+">"
 				replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
 				replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
 				replygetList += "<div id='replyBody'>" + replyList[i].reply 
-				replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				
-				replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
-				replygetList += "<ul class='dropdown-menu dropdown-user'>"
-				replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
-				replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
-				replygetList +=	"<li><a onclick='replyDelete("+replyList[i].rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
-				replygetList += "</ul></div>"
+				//로그인한 계정과, 댓글 작성자가 동일할경우 댓글수정 노출
+				if(replyList[i].replyer === '${userId}'){
+					replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				
+					replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
+					replygetList += "<ul class='dropdown-menu dropdown-user'>"
+					replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
+					replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+					replygetList +=	"<li><a onclick='replyDelete("+replyList[i].rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+					replygetList += "</ul></div>"
+				}
+				
 				replygetList += "</div></div>"
 			}
 			

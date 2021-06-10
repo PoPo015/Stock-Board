@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.stock.domain.NoticesLikeAndDislike;
@@ -18,7 +17,6 @@ import com.stock.mapper.FileUploadMapper;
 import com.stock.mapper.NoticesMapper;
 import com.stock.service.NoticesService;
 import com.stock.util.Criteria;
-import com.stock.util.PageDTO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -73,11 +71,19 @@ public class NoticesServiceImpl implements NoticesService {
 	}
 
 	@Override
-	public void delete(int bno) {
+	public void delete(int bno,HttpSession session) {
 
-		log.info("servicedelete-----" +bno);
+
+		String userId = (String)session.getAttribute("userId");
+		NoticesVo vo = mapper.details(bno);
 		
-		mapper.delete(bno);
+		
+		if(vo.getWriter().equals(userId)) {
+			log.info("로그인한 계정과, 게시글작성자가 동일합니다.삭제합니다");
+			mapper.delete(bno);
+		}else {
+			log.info("비정상적인 삭제.");
+		}
 		
 	}
 
