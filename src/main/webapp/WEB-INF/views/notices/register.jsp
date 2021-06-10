@@ -74,7 +74,7 @@
 										</div>
 										
 										<input type="file" id="file" name="file">
-										<input type="hidden" name="writer" value="관리자"> 
+<!-- 										<input type="hidden" name="writer" value="관리자">  -->
 	
 										<div style="float: right">
 											<button type="button" class="btn btn-suwccess"

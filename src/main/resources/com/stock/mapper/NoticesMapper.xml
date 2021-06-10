@@ -43,7 +43,7 @@
 	<![CDATA[
 	    SELECT * FROM 
 		 (
-		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT, (SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE reply.bno = notices.bno) as replyCount
+		 SELECT /*+INDEX_DESC(NOTICES PK_NOTICES)*/ ROWNUM RN, BNO, TITLE, CONTENT, WRITER, REGTIME, VIEWSCOUNT, LIKECOUNT, (SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE reply.bno = notices.bno) as replyCount
 		 ,(SELECT COUNT(*) FROM NOTICES) AS total
 		 FROM NOTICES NOTICES
 		 WHERE BNO > 0 AND ROWNUM > 0 AND ROWNUM <= #{pageNum} * #{amount}
@@ -98,6 +98,34 @@
 	UPDATE NOTICES SET VIEWSCOUNT = VIEWSCOUNT + 1 WHERE BNO = #{bno}
 	</update>
 	
+	<!-- 좋아요가 되있는가? -->
+	<select id ="noticesLike" parameterType="com.stock.domain.NoticesLikeAndDislike" resultType="int">
+	SELECT COUNT(*) FROM NOTICESLIKE WHERE NOTICESBNO = #{bno} AND USERID =#{userId}
+	</select>
 	
+	<!-- 좋아요 +1 -->
+	<update id="likeUp" parameterType="com.stock.domain.NoticesLikeAndDislike">
+	UPDATE NOTICES SET
+	LIKECOUNT =  (SELECT MAX(LIKECOUNT)+1 FROM NOTICES WHERE BNO = #{bno})
+	WHERE BNO = #{bno}
+	</update>
+	<!-- 좋아요테이블에 user 좋아요 등록 -->
+	<insert id="likeInsert" parameterType="com.stock.domain.NoticesLikeAndDislike">
+	INSERT INTO NOTICESLIKE(NOTICESBNO, USERID)
+	VALUES (#{bno}, #{userId})
+	</insert>
+	
+	<!-- 좋아요 -1 -->
+	<update id="noticesDisLike" parameterType="com.stock.domain.NoticesLikeAndDislike">
+	UPDATE NOTICES SET
+	LIKECOUNT =  (SELECT MAX(likecount)-1 FROM NOTICES WHERE BNO = #{bno})
+	WHERE BNO = #{bno}
+	</update>
+	
+	<!-- user 테이블 삭제 -->
+	<delete id="likeDelete" parameterType="com.stock.domain.NoticesLikeAndDislike">
+	DELETE FROM NOTICESLIKE 
+    WHERE NOTICESBNO =#{bno} AND USERID = #{userId}
+	</delete>
 	
 </mapper>

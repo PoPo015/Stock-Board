@@ -107,15 +107,36 @@
 									</div>
 
 									<div class="col-xs-1" style="text-align:center; border-left: 1px solid gray">
+
+										<!-- 좋아요(로그인이 되어있다면) -->
+										<c:if test="${!empty userId}">
+										<div class="content-function-group">
+											<div id="likeHand" class="note-evaluate-wrapper">
+												<a href="javascript:void(0)" onclick="like()">
+													<i class="fa fa-thumbs-o-up"></i>
+												</a>
+												
+												<div><c:out value = "${details.likeCount}" /></div>
+
+<!-- 												<a href="javascript:void(0)" onclick="dislike()"> -->
+<!-- 													<i id="" class="glyphicon glyphicon-thumbs-down" title=""></i> -->
+<!-- 												</a> -->
+											</div>
+										</div>
+										</c:if>
+										<!-- 좋아요 -->
+										
+										<c:if test="${userId == details.writer}">
 										<!--수정삭제 -->
-										<div class="btn-group content-function-group">
+										<div style="font-size:15px; position: absolute; bottom: 5%; left: 40%">
 											<a class="glyphicon glyphicon-cog" data-toggle="dropdown" href="#"></a>
 											<ul class="dropdown-menu dropdown-user">
 												<li><a href="/notices/modify/${details.bno}" id="modified"><i class="glyphicon glyphicon-edit"></i>수정</a></li>
 												<li><a href="#" id="delete"> <i class="glyphicon glyphicon-trash"></i>삭제</a></li>
 											</ul>
-										</div>
+										</div>	
 										<!--수정삭제 -->
+										</c:if>
 									</div>
 								</div>
 							</div>
@@ -165,17 +186,42 @@
     <!-- /#wrapper -->
 
 
+
 <script>
-
+//게시글에 좋아요를 해당 사용자가 눌렀는지 조회
 (function () {
-	console.log("즉시실행함수!");	
+	$.ajax({
+		url: "/notices/like",
+		type: "post",
+		contentType: "application/json; charset=UTF-8",
+		data: JSON.stringify({
+			"bno" : ${details.bno}
+		}),
+		success: function(data) {
+			console.log("좋아요 클릭 조회 완료");
+			if(data === "like"){
+				
+				let str = '<a href="javascript:void(0)" onclick="dislike()">'
+					str += '<i class="fa fa-thumbs-up"></i></a>'
+					str += '<div>${details.likeCount}</div>'
+					$("#likeHand").html(str);
+			}
+			
+		},
+		error: function(err){
+			console.log("좋아요 클릭 조회 실패");
+		}
+	});
+})();
 
+//파일목록 가져오기
+(function () {
 	$.ajax({
 		url: "/upload/uploadGet",
 		type: "get",
 		data: {"bno" : ${details.bno}},
 		success: function(data) {
-// 				console.log("성공" + JSON.stringify(data));
+				console.log("파일목록 조회 성공");
 				
 				$.each(data, function(index, value){
 
@@ -189,61 +235,123 @@
 			
 		},
 		error: function(err){
-			console.log("실패");
+			console.log("파일목록 조회 실패");
 		}
 	});
 })();
 
+//즉시 실행함수로, 댓글목록을 불러옴
+var reply = function() {  
+	
+	$.ajax({
+		url: "/notices/replyList/${details.bno}",
+		type: "get",
+		dataType: "text",						//서버로부터  반환을 text형식으로 받겠다
+		contentType: "application/json; charset=utf-8",
+		success: function(data){
+			let replygetList ="";
+			let replyList = JSON.parse(data);	//서버에서 String타입 데이터를 json타입으로 변경해서 끄내씀
+			console.log("댓글목록 조회 완료");
+
+			//서버에서 반환된 객체수만큼 반복문으로 동적코드 추가
+			for(let i in replyList){
+// 				console.log(replyList[i].rno);
+				let encodeReply = encodeURI(replyList[i].reply);
+// 				console.log(dataa);
+				
+				
+				replygetList += "<div style='border: solid 1px' data-replyId="+replyList[i].rno+">"
+				replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
+				replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
+				replygetList += "<div id='replyBody'>" + replyList[i].reply 
+				replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				
+				replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
+				replygetList += "<ul class='dropdown-menu dropdown-user'>"
+				replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
+				replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
+				replygetList +=	"<li><a onclick='replyDelete("+replyList[i].rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
+				replygetList += "</ul></div>"
+				replygetList += "</div></div>"
+			}
+			
+			$("#replyList").html(replygetList);
+		},
+		error: function (request, status, error){
+			console.log("댓글목록 조회 실패");
+		}
+	});
+};
+reply();
 </script>
 
 
+<script>
+//좋아요 클릭함수
+function like(){
+	console.log("좋아요");
+	if(confirm("정말 게시글을 좋아요 하시겠습니까?")){
+		$.ajax({
+			url: "/notices/like",
+			type: "post",
+			contentType: "application/json; charset=UTF-8",
+			data: JSON.stringify({
+				"bno" : ${details.bno},
+				"checkLikeAndDislike" : true
+			}),
+			success: function(data) {
+
+				if(data === "success"){
+					let str = '<a href="javascript:void(0)" onclick="dislike()">'
+					str += '<i class="fa fa-thumbs-up"></i></a>'
+					str += '<div>${details.likeCount+1}</div>'
+					$("#likeHand").html(str);
+				}else{
+					alert("로그인을 해주세요.");
+				}
+			
+			},
+			error: function(err){
+				console.log("실패");
+			}
+		});
+	}
+}
+//좋아요 취소함수
+function dislike(){
+	console.log("좋아요 취소");
+
+	if(confirm("좋아요를 취소하시겠습니까?")){
+		$.ajax({
+			url: "/notices/disLike",
+			type: "post",
+			contentType: "application/json; charset=UTF-8",
+			data: JSON.stringify({
+				"bno" : ${details.bno},
+				"checkLikeAndDislike" : true
+			}),
+			success: function(data) {
+				console.log("좋아요 취소 성공");
+				console.log(data);
+				if(data === "success"){
+					let str = '<a href="javascript:void(0)" onclick="like()">'
+						str += '<i class="fa fa-thumbs-o-up"></i></a>'
+						str += '<div>${details.likeCount}</div>'
+					
+					$("#likeHand").html(str);					
+				}				
+			
+			},
+			error: function(err){
+				console.log("실패");
+			}
+		});
+	}
+}
+
+</script>
 
 <script>
 
-	//즉시 실행함수로, 댓글목록을 불러옴
-	var reply = function() {  
-		
-		$.ajax({
-			url: "/notices/replyList/${details.bno}",
-			type: "get",
-			dataType: "text",						//서버로부터  반환을 text형식으로 받겠다
-			contentType: "application/json; charset=utf-8",
-			success: function(data){
-				let replygetList ="";
-				let replyList = JSON.parse(data);	//서버에서 String타입 데이터를 json타입으로 변경해서 끄내씀
-				console.log("즉시실행함수 성공");
-				console.log(replyList);
-				console.log(replyList.length);
-	
-				//서버에서 반환된 객체수만큼 반복문으로 동적코드 추가
-				for(let i in replyList){
-	// 				console.log(replyList[i].rno);
-					let encodeReply = encodeURI(replyList[i].reply);
-	// 				console.log(dataa);
-					
-					
-					replygetList += "<div style='border: solid 1px' data-replyId="+replyList[i].rno+">"
-					replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
-					replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
-					replygetList += "<div id='replyBody'>" + replyList[i].reply 
-					replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				
-					replygetList += "<a class='glyphicon glyphicon-cog' data-toggle='dropdown' href='#'></a>"
-					replygetList += "<ul class='dropdown-menu dropdown-user'>"
-					replygetList += "<li><a onclick='replyModify("+replyList[i].rno+",`"+encodeReply+"`)' data-replyId="+replyList[i].rno+">"
-					replygetList += "<i class='glyphicon glyphicon-edit'></i>수정</a></li>"
-					replygetList +=	"<li><a onclick='replyDelete("+replyList[i].rno+")'> <i class='glyphicon glyphicon-trash'></i>삭제</a></li>"
-					replygetList += "</ul></div>"
-					replygetList += "</div></div>"
-				}
-				
-				$("#replyList").html(replygetList);
-			},
-			error: function (request, status, error){
-				console.log("즉시실행함수 실패");
-			}
-		});
-	};
-	reply();
 
 	//수정버튼클릭
 	$("#modified").click(function(){
@@ -275,7 +383,7 @@
 			data: JSON.stringify ({						//자바에는 json타입이 없으니 String 객체로 변환후 서버로 전송
 				"bno" : ${details.bno},
 				"reply" : $("#reply").val(),
-				"replyer" : "테스트계정"
+				"replyer" : "${userId}"
 			}),
 			success: function(data){
 				$("#reply").val('');					//댓글 등록후, 등록 칸 지움
@@ -374,17 +482,6 @@
 	
 	
 </script>
-
-
-<script>
-//동적태그 추가시 버튼 동작안할떄
-$(document).on(function() {
-
-	
-});
-
-</script> 
-
 
 </body>
 

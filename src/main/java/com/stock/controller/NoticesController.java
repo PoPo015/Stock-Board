@@ -2,6 +2,8 @@ package com.stock.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.stock.domain.NoticesLikeAndDislike;
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.service.NoticesService;
@@ -51,8 +54,9 @@ public class NoticesController {
 	
 	//공지사항 작성
 	@PostMapping("/register")
-	public String noticesRegister2(NoticesVo vo,@RequestParam(required = false)List<Integer> fileBno) throws Exception {
+	public String noticesRegister2(NoticesVo vo,HttpSession session, @RequestParam(required = false)List<Integer> fileBno) throws Exception {
 
+		vo.setWriter((String)session.getAttribute("userId"));;
 		log.info("vo----"+ vo);
 		
 		service.notices(vo,fileBno);
@@ -149,5 +153,33 @@ public class NoticesController {
 		service.noticesReplyDelete(rno);
 	
 	}
+	
+	//좋아요
+	@ResponseBody
+	@PostMapping("/like")
+	public String noticesLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
+		
+		String result = service.noticesLike(vo, session);
+		
+		log.info("Likeresult-----" + result);
+		if(result.equals("success")) {
+			model.addAttribute("details", service.details(vo.getBno()));		//좋아요가 +1 이 반영되고나서 조회가 아니라 전의 데이터로 조회되서 일단 임시로 +1값 추가하는식으로 했음.
+			return "success";
+		}else if(result.equals("like")) {
+			return "like";
+		}else {
+			return "error";
+		}
+		
+	}
+	
+	@ResponseBody
+	@PostMapping("/disLike")
+	public String noticesDisLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
+		
+		
+		return service.noticesDisLike(vo, session);
 
+	}
+	
 }

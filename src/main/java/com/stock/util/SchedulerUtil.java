@@ -59,8 +59,8 @@ public class SchedulerUtil {
 		
 	}
 	
-//	@Scheduled(cron = "0 0 0 * * *")
-	@Scheduled(cron = "30 * * * * *")
+	@Scheduled(cron = "0 0 0 * * *")
+//	@Scheduled(cron = "30 * * * * *")
 	public void userWithdrawal() {
 		
 		ArrayList<UserVo> arrayList = (ArrayList<UserVo>)userMapper.userWithrawalList();

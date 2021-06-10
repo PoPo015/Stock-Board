@@ -2,6 +2,7 @@ package com.stock.mapper;
 
 import java.util.List;
 
+import com.stock.domain.NoticesLikeAndDislike;
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.util.Criteria;
@@ -43,5 +44,16 @@ public interface NoticesMapper {
 
 	//게시글 조회수 +1
 	public void viewsCount(int bno);
+	
+	//좋아요 조회
+	public int noticesLike(NoticesLikeAndDislike vo);
+	//좋아요 +1
+	public void likeUp(NoticesLikeAndDislike vo);
+	//좋아요 테이블에 등록
+	public void likeInsert(NoticesLikeAndDislike vo);
 
+	//좋아요 -1
+	public void noticesDisLike(NoticesLikeAndDislike vo); 
+	//좋아요 테이블에 삭제
+	public void likeDelete(NoticesLikeAndDislike vo);
 }

@@ -139,6 +139,12 @@ values (seq_notices.nextval,'테스트','테스트','테스트')
         
         
         SELECT COUNT(*) FROM NOTICESREPLY REPLY WHERE noticesreply.bno = notices.bno
+      
+      select max(likecount) from notices where bno =335
+      
+        update notices set
+        likeCount =  (select max(likecount)+1 from notices where bno =335)
+        where bno = 335
 ----공지사항 댓글----
 create table noticesreply(
 rno number(10) not null,
@@ -236,3 +242,32 @@ where user_reg_withdrawal between to_char(sysdate-1,'YYYYMMDD') and to_char(sysd
 
 select user_id as userID from notcies_user_withdrawl
 where user_reg_withdrawal <= to_char(sysdate-7,'YYYYMMDD')
+
+
+---좋아요 싫어요-----
+create table noticeslike(
+noticesBno number(10),
+userId varchar2(50),
+--noticesLikeCount number(10),
+LikeReg Date default sysdate,
+CONSTRAINT fk_userid_like FOREIGN KEY(userId) REFERENCES notices_user(user_id) on delete cascade,
+CONSTRAINT fk_like_bno FOREIGN KEY(noticesBno) REFERENCES notices(bno) ON DELETE CASCADE
+)
+
+select * from noticeslike where noticesBno = 123 and userID ='test1234'
+
+update notices set likeCount = (select nvl(max(likecount),0)+1 from notices),
+where bno = 335
+
+insert into noticeslike(noticesbno, userid)
+values (335, 'test1234')
+
+	SELECT * FROM NOTICES
+	WHERE BNO =335
+    
+    	update notices set
+	likeCount =  (select max(likecount)-1 from notices where bno = 332)
+	where bno =332
+    
+    delete from noticeslike 
+    where noticesBno =332 and userid = 'test1111'

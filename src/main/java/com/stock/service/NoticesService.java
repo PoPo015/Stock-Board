@@ -2,8 +2,11 @@ package com.stock.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.stock.domain.NoticesLikeAndDislike;
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.util.Criteria;
@@ -42,4 +45,8 @@ public interface NoticesService {
 	
 	//댓글삭제
 	public void noticesReplyDelete(int rno);
+	//좋아요
+	public String noticesLike(NoticesLikeAndDislike vo, HttpSession session);
+	//좋아요 취소
+	public String noticesDisLike(NoticesLikeAndDislike vo, HttpSession session);
 }

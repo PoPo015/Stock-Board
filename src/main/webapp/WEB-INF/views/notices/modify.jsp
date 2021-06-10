@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%-- <%@include file="../common/common.jsp" %>     --%>
+<%@include file="../common/common.jsp" %>    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,6 +37,11 @@
 </head>
 
 <body>
+	
+	<!-- 비정상적인 접근시 차단 -->
+	<c:if test="${userId != details.writer}">
+		<c:redirect url="http://localhost:5109/notices/list"></c:redirect>
+	</c:if>
 
     <div id="wrapper">
 

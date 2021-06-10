@@ -3,12 +3,15 @@ package com.stock.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.stock.domain.NoticesLikeAndDislike;
 import com.stock.domain.NoticesReplyVo;
 import com.stock.domain.NoticesVo;
 import com.stock.mapper.FileUploadMapper;
@@ -32,8 +35,8 @@ public class NoticesServiceImpl implements NoticesService {
 	@Override
 	public void notices(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno) throws Exception {
 		
-		log.info("vo----" + vo);
-		if(vo.getWriter().equals("관리자")) {
+		log.info("vo----" + vo);	
+		if(vo.getWriter().equals("test1234") || vo.getWriter().equals("test1111")) {		//관리자 계정	
 			mapper.noticesRegister(vo);
 		}
 		
@@ -49,17 +52,7 @@ public class NoticesServiceImpl implements NoticesService {
 			}
 			
 		}
-
 		
-		
-			
-//			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.KOREA);
-//			String time1 = simpleDateFormat.format(new Date());
-//			log.info("time1----" + time1);
-//			vo.setRegTime(time1);
-//			log.info("등록 시간-----" + vo);
-//			
-	
 	}
 
 	@Override
@@ -69,7 +62,6 @@ public class NoticesServiceImpl implements NoticesService {
 		
 	}
 
-	//트랜잭션 
 	@Transactional
 	@Override
 	public NoticesVo details(int bno) {
@@ -160,6 +152,68 @@ public class NoticesServiceImpl implements NoticesService {
 
 		mapper.noticesReplyDelete(rno);
 
+	}
+
+	@Transactional
+	@Override
+	public String noticesLike(NoticesLikeAndDislike vo, HttpSession session) {
+		
+		final String userId = (String)session.getAttribute("userId");		//user id
+		int LikeCheck;												//게시글에 좋아요되있는지?
+		
+		
+		log.info("LiKEVo----" + vo);
+		
+		if(userId != null) {
+			log.info("로그인 계정--" + userId);
+			vo.setUserId(userId);
+			
+			LikeCheck = mapper.noticesLike(vo);
+			
+			log.info("이 계정이 이 게시글에 좋아요 되있나요?" + LikeCheck);
+			
+			if(LikeCheck == 0 && vo.isCheckLikeAndDislike() == true) {
+				mapper.likeUp(vo);
+				log.info("좋아요 +1합니다.");
+				mapper.likeInsert(vo);
+				log.info("like테이블에 정보를 등록합니다. 중복방지.");
+				
+				return "success";
+			}else if(LikeCheck == 1) {
+				return "like";
+			}
+			
+		}
+		
+		log.info("로그인이 안되있습니다.");
+		return "error";
+		
+	}
+
+	@Transactional
+	@Override
+	public String noticesDisLike(NoticesLikeAndDislike vo, HttpSession session) {
+		
+		final String userId=(String)session.getAttribute("userId");
+		int LikeCheck;
+		log.info("로그인계정 아이디 session---" + userId);
+		
+		if(userId != null ) {
+			vo.setUserId(userId);
+			LikeCheck = mapper.noticesLike(vo);
+			
+			if(LikeCheck == 1) {
+				log.info("좋아요취소 합니다");
+				mapper.noticesDisLike(vo);
+				log.info("좋아요 테이블에서 삭제합니다");
+				mapper.likeDelete(vo);
+				return "success";
+			}
+			
+			
+		}
+		log.info("비정상적인 취소");
+		return "error";
 	}
 
 
