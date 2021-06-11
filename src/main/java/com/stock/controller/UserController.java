@@ -173,13 +173,19 @@ public class UserController {
 		
 		log.info("테스트---" + vo);
 		
-		service.userCreate(vo, request); //유저회원가입정보중 공백있으면 400에러발생
+		String result = service.userCreate(vo, request); //유저회원가입정보중 공백있으면 400에러발생
 		
-		response.setContentType("text/html; charset=UTF-8");																//PrintWrtier에서 한글 인코딩이 깨지는 경우 셋팅
-		PrintWriter out = response.getWriter();																				//반드시 PrintWriter 객체 선언하기 전에 셋팅해줘야 함
-		out.println("<script>alert('정상적으로 회원가입 되었습니다.\\n로그인 페이지로 이동합니다'); location.href='/user/login'</script>");	//response.setCharacterEncoding("utf-8");
-		out.flush();	// 현재 출력 버퍼에 저장되어 있는 내용을 웹 브라우저에 전송하고 비운다.
-
+		if(result.equals("success")) {
+			response.setContentType("text/html; charset=UTF-8");																//PrintWrtier에서 한글 인코딩이 깨지는 경우 셋팅
+			PrintWriter out = response.getWriter();																				//반드시 PrintWriter 객체 선언하기 전에 셋팅해줘야 함
+			out.println("<script>alert('정상적으로 회원가입 되었습니다.\\n로그인 페이지로 이동합니다'); location.href='/user/login'</script>");	//response.setCharacterEncoding("utf-8");
+			out.flush();	// 현재 출력 버퍼에 저장되어 있는 내용을 웹 브라우저에 전송하고 비운다.
+		}else {
+			response.setContentType("text/html; charset=UTF-8");																//PrintWrtier에서 한글 인코딩이 깨지는 경우 셋팅
+			PrintWriter out = response.getWriter();																				//반드시 PrintWriter 객체 선언하기 전에 셋팅해줘야 함
+			out.println("<script>alert('비정상적인 회원가입입니다..\\n회원가입 페이지로 이동합니다'); location.href='/user/create'</script>");	//response.setCharacterEncoding("utf-8");
+			out.flush();	// 현재 출력 버퍼에 저장되어 있는 내용을 웹 브라우저에 전송하고 비운다.
+		}
 	}
 
 	//회원탈퇴

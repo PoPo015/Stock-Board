@@ -252,7 +252,26 @@ function fileRemove(Nm, fileBno, filePath){
 
    //새글작성 버튼 클릭
    function registerClick(){
-
+	   
+	   let title = $("#title").val().trim();
+	   let content = $("#content").val().trim();
+	   
+ 	   if(title.length === 0 || title === " "){
+		console.log(title);
+		console.log(title.length);
+		$("#title").focus();
+		alert("제목을 입력해주세요.");
+		return false;
+ 	   }
+ 	   
+ 	   if(content.length ===0 || content === " "){
+ 			console.log(content);
+ 			console.log(content.length)
+ 		    alert("내용을 입력해주세요");
+ 			$("#content").focus();
+ 		   return false;
+ 	   }
+ 	   
       $("#frm").submit();      
    }
 

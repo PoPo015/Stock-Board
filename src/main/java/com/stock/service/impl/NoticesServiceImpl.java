@@ -1,7 +1,9 @@
 package com.stock.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,9 +36,10 @@ public class NoticesServiceImpl implements NoticesService {
 	public void notices(NoticesVo vo, @RequestParam(required = false)List<Integer> fileBno) throws Exception {
 		
 		log.info("vo----" + vo);	
-		if(vo.getWriter().equals("test1234") || vo.getWriter().equals("test1111")) {		//관리자 계정	
+		
+//		if(vo.getWriter().equals("test1234") || vo.getWriter().equals("test1111")) {		//관리자 계정	
 			mapper.noticesRegister(vo);
-		}
+//		}
 		
 		
 		//파일 bno가 form에 담겨옴 업데이트.
@@ -183,17 +186,14 @@ public class NoticesServiceImpl implements NoticesService {
 				log.info("좋아요 +1합니다.");
 				mapper.likeInsert(vo);
 				log.info("like테이블에 정보를 등록합니다. 중복방지.");
-				
 				return "success";
 			}else if(LikeCheck == 1) {
 				return "like";
 			}
-			
 		}
 		
 		log.info("로그인이 안되있습니다.");
 		return "error";
-		
 	}
 
 	@Transactional
@@ -204,6 +204,7 @@ public class NoticesServiceImpl implements NoticesService {
 		int LikeCheck;
 		log.info("로그인계정 아이디 session---" + userId);
 		
+		
 		if(userId != null ) {
 			vo.setUserId(userId);
 			LikeCheck = mapper.noticesLike(vo);
@@ -213,15 +214,12 @@ public class NoticesServiceImpl implements NoticesService {
 				mapper.noticesDisLike(vo);
 				log.info("좋아요 테이블에서 삭제합니다");
 				mapper.likeDelete(vo);
+				
 				return "success";
 			}
-			
-			
 		}
 		log.info("비정상적인 취소");
 		return "error";
 	}
-
-
 
 }

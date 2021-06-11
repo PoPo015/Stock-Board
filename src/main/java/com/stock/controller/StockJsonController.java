@@ -76,9 +76,8 @@ public class StockJsonController {
 			// json으로 된 데이터중 중복된 데이터가 있는지 확인, 있다면 1반환 없다면 0 반환 
 			int jsonCount = service.getJson(vo2);
 			int jsonCountRel = service.getJson2(vo2);
-			
 			try {
-				File file = new File("C:\\Users\\popo\\Documents\\stock-toy\\stock-toy\\err\\VI_log.txt");
+				File file = new File("C:\\Users\\popo\\Desktop\\stock-toy\\stock-toy\\err\\VI_log.txt");
 				fos = new FileOutputStream(file,true); // VI_log파일에 출력 준비
 				ps=new PrintStream(fos); // err의 출력을 화면이 아닌, error.log파일로 변경
 				System.setErr(ps);
@@ -129,7 +128,7 @@ public class StockJsonController {
 		PrintStream ps = null;
 		FileOutputStream fos=null;
 		try {
-			File file = new File("C:\\Users\\popo\\Documents\\stock-toy\\stock-toy\\err\\VI_News_log.txt");
+			File file = new File("C:\\Users\\popo\\Desktop\\stock-toy\\stock-toy\\err\\VI_News_log.text");
 			fos = new FileOutputStream(file,true); // VI_News_log파일에 출력 준비
 			ps=new PrintStream(fos); // err의 출력을 화면이 아닌, error.log파일로 변경
 			System.setErr(ps);

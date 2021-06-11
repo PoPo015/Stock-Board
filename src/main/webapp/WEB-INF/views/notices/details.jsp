@@ -143,15 +143,15 @@
 						</div>
 							
 							<!-- 댓글 -->
-			<div class="panel panel-default">
-			  <div class="panel-heading">댓글</div>
-			 
-				  <div class="panel-body">
-					<textarea rows="3" style="width:90%" placeholder="댓글 쓰기" id="reply"></textarea>
-					<button type="button" id="replyReg">등록</button>
-				  </div>
-				
-			</div>
+			 <c:if test="${!empty userId}">
+				<div class="panel panel-default">
+				  <div class="panel-heading">댓글</div>
+					  <div class="panel-body">
+						<textarea rows="3" style="width:90%" placeholder="댓글 쓰기" id="reply"></textarea>
+						<button type="button" id="replyReg">등록</button>
+					  </div>
+				</div>
+			</c:if>	
 		<!-- 부트스트랩 상세보기 -->
                     </div>
                 </div>
@@ -199,7 +199,7 @@
 		}),
 		success: function(data) {
 			console.log("좋아요 클릭 조회 완료");
-			if(data === "like"){
+			if(data.result === "like"){
 				
 				let str = '<a href="javascript:void(0)" onclick="dislike()">'
 					str += '<i class="fa fa-thumbs-up"></i></a>'
@@ -303,13 +303,15 @@ function like(){
 			}),
 			success: function(data) {
 
-				if(data === "success"){
+				if(data.result === "success"){
 					let str = '<a href="javascript:void(0)" onclick="dislike()">'
 					str += '<i class="fa fa-thumbs-up"></i></a>'
-					str += '<div>${details.likeCount+1}</div>'
+					str += '<div>'+data.likeCount+'</div>'
 					$("#likeHand").html(str);
+				}else if(data.result === "like"){
+					alert("이미 좋아요가 되있습니다..");
 				}else{
-					alert("로그인을 해주세요.");
+					alert("비정상적인 접근 \n 로그인을 해주세요.");
 				}
 			
 			},
@@ -333,14 +335,14 @@ function dislike(){
 				"checkLikeAndDislike" : true
 			}),
 			success: function(data) {
-				console.log("좋아요 취소 성공");
-				console.log(data);
-				if(data === "success"){
+				if(data.result === "success"){
 					let str = '<a href="javascript:void(0)" onclick="like()">'
 						str += '<i class="fa fa-thumbs-o-up"></i></a>'
-						str += '<div>${details.likeCount}</div>'
+						str += '<div>'+data.likeCount+'</div>'
 					
 					$("#likeHand").html(str);					
+				}else if(data.result === "error"){
+					alert("비정상적인 좋아요 취소");
 				}				
 			
 			},

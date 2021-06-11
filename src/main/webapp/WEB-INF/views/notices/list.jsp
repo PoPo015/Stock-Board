@@ -61,7 +61,9 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h3>목록
+                            	<c:if test="${!empty userId}"> <!-- 로그인했을시 -->
 	                            <button type="button" class="btn btn-success" style="float:right" onclick="registerClick()">공지사항 작성</button>
+                            	</c:if>
                             </h3> 
                             
                             <div class="table-responsive">

@@ -1,6 +1,8 @@
 package com.stock.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -55,7 +57,24 @@ public class NoticesController {
 	//공지사항 작성
 	@PostMapping("/register")
 	public String noticesRegister2(NoticesVo vo,HttpSession session, @RequestParam(required = false)List<Integer> fileBno) throws Exception {
-
+		
+		String title = vo.getTitle();
+		String content = vo.getContent();
+		//제목값이 공백 / null / 길이가 0일경우
+		if(title.length() == 0 || title.equals(" ") || title.equals("null")) {
+			return "redirect:/notices/list";
+		}
+		//내용값이 공백 / null /길이가0일경우
+		if(content.length() == 0 || title.equals(" ") || title.equals("null")) {
+			return "redirect:/notices/list";
+		}
+		
+		
+		if((String)session.getAttribute("userId") == null) {
+			return "redirect:/notices/list";
+		}
+		
+		
 		vo.setWriter((String)session.getAttribute("userId"));;
 		log.info("vo----"+ vo);
 		
@@ -90,7 +109,7 @@ public class NoticesController {
 	//공지사항 수정
 	@GetMapping("/modify/{bno}")
 	public String noticesModify(@PathVariable("bno")int bno, Model model) {
-	
+		
 		log.info("수정번호-----" + bno);
 		
 		model.addAttribute("details",service.details(bno));
@@ -101,6 +120,18 @@ public class NoticesController {
 	//공지사항 수정
 	@PostMapping("/modify")
 	public String noticesModify2(NoticesVo vo, HttpSession session, @RequestParam(required = false)List<Integer> fileBno, Model model) {
+		
+		String title = vo.getTitle();
+		String content = vo.getContent();
+		//제목값이 공백 / null / 길이가 0일경우
+		if(title.length() == 0 || title.equals(" ") || title.equals("null")) {
+			return "redirect:/notices/list";
+		}
+		//내용값이 공백 / null /길이가0일경우
+		if(content.length() == 0 || title.equals(" ") || title.equals("null")) {
+			return "redirect:/notices/list";
+		}
+		
 		//비정상적인 수정접근
 		if(!vo.getWriter().equals(session.getAttribute("userId"))) {
 			log.info("비정상적인 수정. 수정하지않습니다.");
@@ -115,7 +146,19 @@ public class NoticesController {
 	
 	//공지사항 댓글 등록
 	@PostMapping(value ="/reply", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo) {
+	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo, HttpSession session) {
+		
+		String reply = vo.getReply();
+		String replyer = vo.getReplyer();
+		//제목값이 공백 / null / 길이가 0일경우
+		if(reply.length() == 0 || reply.equals(" ") || reply.equals("null")) {
+			return new ResponseEntity<NoticesReplyVo>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		//내용값이 공백 / null /길이가0일경우
+		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
+			return new ResponseEntity<NoticesReplyVo>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 		
 		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);
@@ -137,7 +180,23 @@ public class NoticesController {
 	//공지사항 댓글 수정
 	@ResponseBody
 	@PostMapping(value="/replyModify")
-	public void replyModify(@RequestBody NoticesReplyVo vo) {
+	public void replyModify(@RequestBody NoticesReplyVo vo,HttpSession session) {
+		
+		String reply = vo.getReply();
+		String replyer = vo.getReplyer();
+		//제목값이 공백 / null / 길이가 0일경우
+		if(reply.length() == 0 || reply.equals(" ") || reply.equals("null")) {
+
+		}
+		//내용값이 공백 / null /길이가0일경우
+		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
+		}
+		
+		//비정상적인 수정접근
+		if(!(boolean) session.getAttribute("userId")) {
+			log.info("비정상적인 댓글등록. 댓글등록 하지않습니다.");
+		}
+		
 		
 		log.info("댓글수정 vo---" + vo);
 		
@@ -159,28 +218,43 @@ public class NoticesController {
 	//좋아요
 	@ResponseBody
 	@PostMapping("/like")
-	public String noticesLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
+	public Map<String, Object> noticesLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
 		
 		String result = service.noticesLike(vo, session);
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		log.info("Likeresult-----" + result);
+		
 		if(result.equals("success")) {
-			model.addAttribute("details", service.details(vo.getBno()));		//좋아요가 +1 이 반영되고나서 조회가 아니라 전의 데이터로 조회되서 일단 임시로 +1값 추가하는식으로 했음.
-			return "success";
+			map.put("result", "success");
+			map.put("likeCount", service.details(vo.getBno()).getLikeCount());
+			return map;
 		}else if(result.equals("like")) {
-			return "like";
+			map.put("result", "like");
+			return map;
 		}else {
-			return "error";
+			map.put("result", "error");
 		}
-		
+
+		return null;
 	}
 	
 	@ResponseBody
 	@PostMapping("/disLike")
-	public String noticesDisLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
+	public Map<String, Object> noticesDisLike(@RequestBody NoticesLikeAndDislike vo, HttpSession session, Model model) {
 		
+		String result = service.noticesDisLike(vo, session);
+		Map<String, Object> map = new HashMap<String, Object>();
 		
-		return service.noticesDisLike(vo, session);
+		if(result.equals("success")) {
+			map.put("result", "success");
+			map.put("likeCount", service.details(vo.getBno()).getLikeCount());
+			return map;
+		}else {
+			map.put("result","error");
+			return map;
+		}
+		
+				
 
 	}
 	

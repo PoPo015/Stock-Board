@@ -38,18 +38,26 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void userCreate(UserVo vo, HttpServletRequest request) {
+	public String userCreate(UserVo vo, HttpServletRequest request) {
 
-		String hashPassword = BCrypt.hashpw(vo.getUserPw(), BCrypt.gensalt());		//패스워드 암호화
-
-		vo.setUserIp(GetClientIp.getClientIP(request));
-		vo.setUserPw(hashPassword);
+		String regId = "^[a-zA-Z0-9]{5,11}$";											//영문,숫자 5~11 미만 정규식
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
 		
-		
-		log.info("회원가입합니다----" + vo);
+		if(Pattern.matches(regId, vo.getUserId()) && Pattern.matches(regPw, vo.getUserPw())) {
+			String hashPassword = BCrypt.hashpw(vo.getUserPw(), BCrypt.gensalt());		//패스워드 암호화
 	
-		mapper.userCreate(vo);
+			vo.setUserIp(GetClientIp.getClientIP(request));
+			vo.setUserPw(hashPassword);
+			
+			
+			log.info("회원가입합니다----" + vo);
 		
+			mapper.userCreate(vo);
+			return "success";
+		}
+		
+		log.info("비정상적인 회원가입");
+		return "error";
 	}
 
 	@Override
