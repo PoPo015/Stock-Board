@@ -1,5 +1,10 @@
 package com.stock.service.impl;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,10 +13,18 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.stock.domain.UserVo;
 import com.stock.mapper.UserMapper;
 import com.stock.service.UserService;
 import com.stock.util.GetClientIp;
+import com.stock.util.NaverLogin;
 
 import lombok.extern.log4j.Log4j;
 
@@ -136,7 +149,7 @@ public class UserServiceImpl implements UserService {
 		
 		log.info("hashPw---" + hashPwCheck);
 		log.info("hashnew---" + hashPassword);
-		if(Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null) {
+		if(Pattern.matches(regPw, vo.getUserPw()) && hashPwCheck != null && Pattern.matches(regPw, vo.getNewPassword())) {
 			
 			log.info("pwcheck---" + hashPwCheck);
 			log.info("BcrCheck--" + BCrypt.checkpw(vo.getUserPw(), hashPwCheck));	
@@ -198,6 +211,112 @@ public class UserServiceImpl implements UserService {
 		}
 		return "error";
 		
+	}
+
+	@Override
+	public String userKakao(UserVo vo) {
+
+		int userIdCheck = mapper.userIdCheck(vo.getUserId());
+		vo.setUserNick("(kakao)"+vo.getUserNick());
+		
+		if(userIdCheck == 0) {
+			log.info("카카오 계정이없습니다. 카카오 회원가입합니다.");
+			vo.setProVider("kakao");
+			mapper.userKakao(vo);
+			return "kakaoSuccess";
+		}else if(userIdCheck == 1) {
+			log.info("카카오계정이 이미 있습니다. 로그인만합니다");
+			return "kakaoLogin";
+		}
+	
+		
+		return "kakaoError";
+	}
+
+	@Override
+	public UserVo userNaver(String accessToken) {
+
+			String token = accessToken; // 네이버 로그인 접근 토큰;
+	        String header = "Bearer " + token; // Bearer 다음에 공백 추가
+	        String apiURL = "https://openapi.naver.com/v1/nid/me";
+	        UserVo vo = new UserVo();
+	        Map<String, String> requestHeaders = new HashMap<>();
+	        requestHeaders.put("Authorization", header);
+	        String responseBody = NaverLogin.get(apiURL,requestHeaders);
+	        
+	        System.out.println(responseBody);
+	        
+	        JsonParser jParser = new JsonParser();
+	        JsonObject jObject = (JsonObject) jParser.parse(responseBody);
+	        log.info("object----" + jObject);
+	        
+	        JsonObject response = (JsonObject)jObject.get("response");
+	        //네이버는 "아이디값" 이런식으로 뽑혀져서 문자열 자르기함
+ 	        vo.setUserId((String)response.get("id").toString().substring(1,response.get("id").toString().length()-1));
+	        vo.setUserNick("(naver)" + (String)response.get("nickname").toString().substring(1,response.get("nickname").toString().length()-1));
+	        vo.setUserEmail((String)response.get("email").toString().substring(1,response.get("email").toString().length()-1));
+	        vo.setUserPhone((String)response.get("mobile").toString().substring(1,response.get("mobile").toString().length()-1));
+	        vo.setUserNm((String)response.get("name").toString().substring(1,response.get("name").toString().length()-1));
+	        vo.setProVider("naver");
+	        log.info("vo --" + vo);
+	        
+	        
+	        int userIdCheck = mapper.userIdCheck(vo.getUserId());
+		        if(userIdCheck == 0) {
+		        	log.info("계정이 없습니다. 회원가입 합니다.");
+		        	mapper.userKakao(vo);
+		        }else {
+		        	log.info("계정이 있습니다. 로그인합니다.");
+		        }
+	        
+	        return vo;
+	}
+
+	@Override
+	public UserVo userGoogle(String accessToken) throws GeneralSecurityException, IOException {
+		log.info("access--" + accessToken);
+		UserVo vo = new UserVo();
+		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
+			    // Specify the CLIENT_ID of the app that accesses the backend:
+			    .setAudience(Collections.singletonList("821344491779-sgqahrsao6njue7ahrhl4b4daauraeor.apps.googleusercontent.com"))
+			    // Or, if multiple clients access the backend:
+			    //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+			    .build();
+
+			// (Receive idTokenString by HTTPS POST)
+
+			GoogleIdToken idToken = verifier.verify(accessToken);
+			if (idToken != null) {
+			  Payload payload = idToken.getPayload();
+
+			  // Print user identifier
+			  String userId = payload.getSubject();
+			  System.out.println("User ID: " + userId);
+
+			  // Get profile information from payload
+			  String email = payload.getEmail();
+//			  boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+			  String name = (String) payload.get("name");
+//			  String pictureUrl = (String) payload.get("picture");
+//			  String locale = (String) payload.get("locale");
+//			  String familyName = (String) payload.get("family_name");
+//			  String givenName = (String) payload.get("given_name");
+			  int userIdCheck = mapper.userIdCheck(userId);
+			  	if(userIdCheck == 0) {
+			  		log.info("구글 계정이없습니다 회원가입합니다.");
+			  		vo.setUserId(userId);
+			  		vo.setUserEmail(email);
+			  		vo.setUserNm(name);
+			  		vo.setUserNick("(google)" + name);
+			  		vo.setProVider("google");
+			  		mapper.userGoogle(vo);
+			  	}else {
+			  		vo.setUserNick("(google)" + name);
+			  	}
+			} else {
+			  System.out.println("Invalid ID token.");
+			}
+		return vo;
 	}
 
 }

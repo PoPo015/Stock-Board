@@ -31,7 +31,13 @@ public interface UserMapper {
 	public void userWithrawalCancel(String userId);
 	//user 회원탈퇴 7일지난 리스트
 	public List<UserVo> userWithrawalList();
-	
 	//user 회원탈퇴처리
 	public void userRemove(String userId);
+	//kakao 회원가입 
+	public void userKakao(UserVo vo);
+	//naver 회원가입
+	public void userNaver(UserVo vo);
+	//google 회원가입
+	public void userGoogle(UserVo vo);
+	
 }

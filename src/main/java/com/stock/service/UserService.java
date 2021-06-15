@@ -1,5 +1,8 @@
 package com.stock.service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.stock.domain.UserVo;
@@ -22,4 +25,10 @@ public interface UserService {
 	public String realUserWithdrawal(UserVo vo); 
 	//user 회원탈퇴 철회
 	public String userWithrawalCancel(UserVo vo);
+	//카카오 로그인
+	public String userKakao(UserVo vo);
+	//구글 로그인
+	public UserVo userNaver(String accessToken);
+
+	public UserVo userGoogle(String accessToken) throws GeneralSecurityException, IOException;
 }

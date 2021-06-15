@@ -91,7 +91,7 @@
 <script>
 var regExpPw = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; // 특수문자 / 문자 / 숫자 포함 형태의 8~15자리 이내의 암호 정규식
 
-	//pw 정규식검증
+/* 	//pw 정규식검증
 	$("#userPw").change(function() {
 		console.log("pw 변경사항있음.");
 		if(!regExpPw.test($("#userPw").val())){
@@ -110,11 +110,29 @@ var regExpPw = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; // 
 			return false;
 		}
 	});
-	
+	 */
 	
 	//공백 검증 코드 필요
 function pwChange(){
 
+	if(!regExpPw.test($("#userPw").val())){
+		$("#userPw").focus();
+		alert("비밀번호를 확인해주세요");
+		return false;
+	}
+	
+	if(!regExpPw.test($("newPassword").val())){
+		$("#newPaasword").focus();
+		alert("새 비밀번호를 확인해주세요. \n 비밀번호는 특수문자,영문자,숫자가 포함된 8글자 이상입니다.");
+		return false;
+	}
+	
+	if($("#newPassword").val() !== $("#passwordConfirm").val()){
+		$("#passwordConfirm").focus();
+		alert("입력한 패스워드가 다릅니다. 확인해주세요");
+		return false;
+	}
+		
 		$("#frm").submit();
 }
 

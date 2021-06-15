@@ -212,6 +212,9 @@ user_email varchar2(100),
 user_ip varchar2(100)
 )
 ALTER TABLE notices_user ADD CONSTRAINT pk_userid PRIMARY KEY (user_id)   -- PK를 생성한다.
+Alter table notices_user add provider varchar2(10) default 'local'         --가입경로
+alter table notices_user add(user_nick varchar2(50))                        --닉네임컬럼추가
+alter table notices_user modify(user_id varchar2(50))                          
 
 		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = 'abc'
         
@@ -271,3 +274,6 @@ values (335, 'test1234')
     
     delete from noticeslike 
     where noticesBno =332 and userid = 'test1111'
+    
+    		SELECT USER_ID,USER_NAME,USER_PHONE,USER_ADDRESS_ZIP_CODE,USER_ADDRESS_ROAD_NAME,USER_ADDRESS_DETAILED,USER_EMAIL 
+		FROM NOTICES_USER WHERE USER_ID = 'test1234' or user_nick = '(naver)포포015'

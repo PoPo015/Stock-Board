@@ -1,5 +1,8 @@
  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.security.SecureRandom" %>
+<%@ page import="java.math.BigInteger" %>
 
 <%@include file="../common/common.jsp" %>
 
@@ -7,8 +10,11 @@
 <html lang="en">
 
 <head>
-
-	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	
+	<script src="https://apis.google.com/js/platform.js" async defer></script> <!-- 구글 api -->
+	<meta name="google-signin-client_id" content="821344491779-sgqahrsao6njue7ahrhl4b4daauraeor.apps.googleusercontent.com"> <!-- 구글 api -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>	<!-- 다음 주소 api -->
+	 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>	<!-- 네이버로그인 api -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,6 +25,8 @@
 </head>
 
 <body>
+
+
     <div id="wrapper">
 
 	<!-- 네비게이션바 -->
@@ -104,10 +112,40 @@
                 <div class="col-lg-5">
                     <div class="panel panel-default">
                         <div class="panel-body">
-						<button>네이버 회원가입</button>
-						<button>구글 회원가입</button>
-						<button>카카오 회원가입</button>
-
+                        
+						<!-- 카카오로그인 -->
+						<div>
+							<a id="custom-login-btn" href="javascript:loginWithKakao()">
+								<img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222" />
+							</a>
+						</div>
+						<!-- 카카오로그인  -->
+							
+						<!-- 네이버 로그인 -->
+						  <%
+						    String clientId = "WDXIVy7CxYf0BQJY6pfh";//애플리케이션 클라이언트 아이디값";
+						    String redirectURI = URLEncoder.encode("http://124.59.10.246:5109/user/naverLogin", "UTF-8");	//여기있는 url 컨트롤러로 보내고, controller에서 매핑받아 callback.jsp로 보내서 검증하는것, url이 중요함
+						    SecureRandom random = new SecureRandom();
+						    String state = new BigInteger(130, random).toString();
+						    String apiURL = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
+						    apiURL += "&client_id=" + clientId;
+						    apiURL += "&redirect_uri=" + redirectURI;
+						    apiURL += "&state=" + state;
+						    session.setAttribute("state", state);
+ 						%>
+ 						<div>
+						  <a href="<%=apiURL%>"><img height="50" src="http://static.nid.naver.com/oauth/small_g_in.PNG"/></a>
+						</div>
+						<!--  네이버 로그인 -->
+						
+						<!-- 구글 로그인(히든값은 구글은 로그인되있으면 자동로그인되서 체크를 위해 히든값추가) -->
+						<div>
+                   	    	<input type="hidden" id="googleToken" value="">
+                    	    <input type="hidden" id="googlebtn" value="">                        
+							<div class="g-signin2" data-onsuccess="onSignIn" id="googleLogin"></div>
+                        </div>
+                        <!--  구글로그인 -->
+                        
                         </div>
                     </div>
                 </div>
@@ -122,9 +160,8 @@
     <!-- /#wrapper -->
 
 
-<script>
-</script>
-
+<!-- sns로그인 api -->
+<script src="/resources/js/snsLogin.js"></script>
 
 <script>
 var regExpId= /^[A-za-z0-9]{4,12}$/; //id 형식 체크 정규식 대,소문자,숫자 12자리미만

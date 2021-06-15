@@ -14,7 +14,26 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
+	<!-- 구글 sns 연동-->
+	<dependency>
+	    <groupId>com.google.api-client</groupId>
+	    <artifactId>google-api-client</artifactId>
+	    <version>1.23.0</version>
+	</dependency>
 	
+	<!-- 구글 sns 연동 -->
+	<dependency>
+	    <groupId>com.google.oauth-client</groupId>
+	    <artifactId>google-oauth-client-jetty</artifactId>
+	    <version>1.23.0</version>
+	</dependency>	
+	
+	<!-- 구글 sns 연동 -->
+	<dependency>
+	    <groupId>com.google.api-client</groupId>
+	    <artifactId>google-api-client-jackson2</artifactId>
+	    <version>1.30.10</version>
+	</dependency>
 	
 	<!-- bcrypt 암호화 라이브러리 -->
 	<dependency>

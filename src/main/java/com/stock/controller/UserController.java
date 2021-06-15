@@ -2,17 +2,22 @@ package com.stock.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.GeneralSecurityException;
 
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -78,10 +83,12 @@ public class UserController {
 	//마이페이지
 	@GetMapping("/myPage")
 	public ModelAndView userMyPage(HttpSession session) {
-
+		log.info(service.userMyPage((String)session.getAttribute("userId")));
 		ModelAndView mv = new ModelAndView();
 		UserVo vo = service.userMyPage((String)session.getAttribute("userId"));
 
+		log.info("myPage vo----" + vo);
+		 
 		if(vo.getUserRegWithdrawal() != null) {
 			log.info("회원탈퇴계정입니다.");
 			
@@ -206,6 +213,7 @@ public class UserController {
 
 	}
 	
+	//회원탈퇴 철회
 	@ResponseBody
 	@PostMapping("/withdrawalCancel")
 	public String userWithrawalCancel(@RequestBody UserVo vo, HttpSession session) {
@@ -215,6 +223,53 @@ public class UserController {
 		
 		return service.userWithrawalCancel(vo);
 	}
+	
+	//카카오 로그인
+	@ResponseBody
+	@PostMapping("/kakaoLogin")
+	public String kakaoLogin(@RequestBody UserVo vo, HttpSession session) {
+
+
+		String kakaoResult = service.userKakao(vo);
+		log.info(kakaoResult);
+		if(kakaoResult.equals("kakaoSuccess")) {
+			log.info("카카오 회원가입을 합니다.");
+			session.setAttribute("userId", vo.getUserNick());
+			return "kakaoSuccess";
+		}else if(kakaoResult.equals("kakaoLogin")) {
+			log.info("이미 연동되있는 카카오 계정입니다.");
+			session.setAttribute("userId", vo.getUserNick());
+			return "kakaoLogin";
+		}else {
+			log.info("카카오 로그인 에러");
+			return "kakaoError";
+		}
+	}
+	
+	//네이버 로그인
+	@GetMapping("/naverLogin")
+	public String naverLogin(@RequestParam(value="access_token", required = false) String accessToken, HttpSession session){
+		
+		if(accessToken == null ) {
+			log.info("토큰값 없습니다 콜백 jsp로 보냅니다.----" + accessToken);
+			return "/user/naver/userNaverCallBack";
+		}else {
+			UserVo vo = service.userNaver(accessToken);
+			session.setAttribute("userId", vo.getUserNick());
+            return "redirect:/notices/list"; 
+		}
+		
+	}
+	
+	//구글 로그인
+	@ResponseBody
+	@PostMapping(value = "/googleLogin", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void googleLogin(@RequestBody UserVo vo, HttpSession session) throws GeneralSecurityException, IOException {
+		log.info("vo--"+ vo);
+		vo = service.userGoogle(vo.getIdToken());
+		session.setAttribute("userId", vo.getUserNick());
+	}
+	
 	
 	//id,email중복체크
 	@ResponseBody

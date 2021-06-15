@@ -240,9 +240,9 @@
 	});
 })();
 
-//즉시 실행함수로, 댓글목록을 불러옴
-var reply = function() {  
-	
+
+//댓글 리스트
+var replyList = function (){
 	$.ajax({
 		url: "/notices/replyList/${details.bno}",
 		type: "get",
@@ -283,8 +283,10 @@ var reply = function() {
 			console.log("댓글목록 조회 실패");
 		}
 	});
-};
-reply();
+}
+replyList();
+
+
 </script>
 
 
@@ -357,7 +359,6 @@ function dislike(){
 
 <script>
 
-
 	//수정버튼클릭
 	$("#modified").click(function(){
 		console.log("수정 클릭");
@@ -377,6 +378,14 @@ function dislike(){
 
 	//댓글 등록버튼 클릭
 	$("#replyReg").click(function(){
+	
+		let reply = $("#reply").val().trim();
+		
+	 	   if(reply.length ===0 || reply === " "){
+	 		    alert("댓글 내용을 작성해주세요");
+	 			$("#reply").focus();
+	 		   return false;
+	 	   }
 		
 	let replyChg ="";
 	
@@ -395,8 +404,6 @@ function dislike(){
 				let replyList = JSON.parse(data);		//서버 String 타입의 vo객체를 object형식으로 변환
 				console.log("댓글등록성공" + replyList.reply);
 				let encodeReply = encodeURI(replyList.reply);
-				
-				
 				
 				replyChg += "<div style='border: solid 1px' data-replyId=" +replyList.rno+ ">"
 				replyChg += "<div id='replyHeader'>" + replyList.replyer + "</div>"
@@ -435,13 +442,21 @@ function dislike(){
 		let replyChg ="";
 		
 		replyChg += "<textarea rows='3' cols='90' name='reply' id='replyChg"+rno+"'>"+ getreply +"</textarea>"
-		replyChg += "<button onclick='replyModifyAjax("+rno+")'>수정</button><button onclick='reply()'>취소</button>"
+		replyChg += "<button onclick='replyModifyAjax("+rno+")'>수정</button><button onclick='replyList()'>취소</button>"
 				
 		$("div[data-replyid="+rno+"]").html(replyChg);
 				
 	}
 	//댓글수정 ajax
 	function replyModifyAjax(rno){
+		
+		let reply = $("#replyChg"+rno+"").val().trim();
+		
+	 	   if(reply.length ===0 || reply === " "){
+	 		    alert("댓글 내용을 작성해주세요");
+	 			$("#replyChg"+rno+"").focus();
+	 		   return false;
+	 	   }
 		
 		$.ajax({
 			url: "/notices/replyModify",
@@ -450,15 +465,21 @@ function dislike(){
 			contentType: "application/json; charset=utf-8",
 			data: JSON.stringify ({						//자바에는 json타입이 없으니 String 객체로 변환후 서버로 전송
 				"rno" : rno,
-				"reply" : $("#replyChg"+rno+"").val()
+				"reply" : $("#replyChg"+rno+"").val(),
+				"replyer" : "${userId}"
 			}),
 			success: function(data){
-				console.log("댓글 수정 성공");
-				reply();
+				
+				if(data === "success"){
+					console.log("댓글 수정 성공");
+					replyList();
+				}else if(data ==="error"){
+					alert("비정상적인 댓글수정");
+				}
 			},
 			error: function (request, status, error){
 				console.log("댓글 수정 실패");
-			}
+			},
 		})	
 	};
 	
@@ -472,7 +493,7 @@ function dislike(){
 				type: "post",
 				success: function(data){
 					console.log("댓글 삭제 성공");
-					reply();
+					replyList();
 				},
 				error: function (request, status, error){
 					console.log("댓글 삭제 실패");

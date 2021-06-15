@@ -180,28 +180,25 @@ public class NoticesController {
 	//공지사항 댓글 수정
 	@ResponseBody
 	@PostMapping(value="/replyModify")
-	public void replyModify(@RequestBody NoticesReplyVo vo,HttpSession session) {
+	public String replyModify(@RequestBody NoticesReplyVo vo) {
 		
 		String reply = vo.getReply();
 		String replyer = vo.getReplyer();
+		
 		//제목값이 공백 / null / 길이가 0일경우
 		if(reply.length() == 0 || reply.equals(" ") || reply.equals("null")) {
-
+			return "error";
 		}
 		//내용값이 공백 / null /길이가0일경우
 		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
-		}
-		
-		//비정상적인 수정접근
-		if(!(boolean) session.getAttribute("userId")) {
-			log.info("비정상적인 댓글등록. 댓글등록 하지않습니다.");
+			return "error";
 		}
 		
 		
 		log.info("댓글수정 vo---" + vo);
-		
 		service.noticesReplyModify(vo);
 		
+		return "success";
 	}
 	
 	//공지사항 댓글삭제
@@ -234,7 +231,7 @@ public class NoticesController {
 		}else {
 			map.put("result", "error");
 		}
-
+		
 		return null;
 	}
 	

@@ -47,7 +47,7 @@
 	
 	<select id="userMyPage" parameterType="String" resultMap="UserVo">
 		SELECT USER_ID,USER_NAME,USER_PHONE,USER_ADDRESS_ZIP_CODE,USER_ADDRESS_ROAD_NAME,USER_ADDRESS_DETAILED,USER_EMAIL 
-		FROM NOTICES_USER WHERE USER_ID = #{userId}
+		FROM NOTICES_USER WHERE USER_ID = #{userId} or USER_Nick = #{userId}
 	/* 마이페이지 정보 출력 */
 	</select>	
 	
@@ -91,6 +91,26 @@
 	
 	<delete id="userRemove" parameterType="String">
 		DELETE FROM notices_user WHERE USER_ID = #{userId}
+	/* 유저 계정 삭제 */
 	</delete>
+	
+	
+	<insert id="userKakao" parameterType="com.stock.domain.UserVo">
+	insert into NOTICES_USER(user_id, user_nick, user_email, provider)
+	values(#{userId}, #{userNick}, #{userEmail}, #{proVider})
+	/* 카카오 계정 회원가입 */
+	</insert>
+	
+	<insert id="userNaver" parameterType="com.stock.domain.UserVo">
+	insert into NOTICES_USER(user_id, user_nick, user_email,user_phone, provider)
+	values(#{userId}, #{userNick}, #{userEmail}, #{userNm}, #{proVider})
+	/* 네이버 계정 회원가입 */
+	</insert>
+	
+	<insert id="userGoogle" parameterType="com.stock.domain.UserVo">
+	insert into NOTICES_USER(user_id, user_nick, user_email,user_phone, provider)
+	values(#{userId}, #{userNick}, #{userEmail}, #{userNm}, #{proVider})
+	/* 구글 계정 회원가입 */
+	</insert>
 	
 </mapper>
