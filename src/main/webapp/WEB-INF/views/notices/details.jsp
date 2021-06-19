@@ -96,13 +96,13 @@
 									<div class="content-function-cog share-btn-wrapper" style="border-bottom: 1px solid gray">
 										<h3>
 											&nbsp;&nbsp;&nbsp;
-											<c:out value="${details.title}" />
+											${details.title}
 										</h3>
 									</div>
 								<div style="display:flex;">
 									<div class="col-xs-11" id="dataList" style="min-height:300px">
 										<h4>
-											<c:out value="${details.content}" />
+											${details.content}
 										</h4>
 									</div>
 
@@ -167,9 +167,9 @@
                         <div class="panel-body">
                         
 							<!-- 동적태그 추가  -->
-							<div class="panel panel-info">
+							<div class="panel panel-default">
 								<div class="panel-heading clearfix">
-									<div id="replyList">
+									<div id="replyList" class="">
 									
 									</div>
 								</div>
@@ -258,11 +258,11 @@ var replyList = function (){
 // 				console.log(replyList[i].rno);
 				let encodeReply = encodeURI(replyList[i].reply);
 				
-				
 				replygetList += "<div style='border: solid 1px' data-replyId="+replyList[i].rno+">"
 				replygetList += "<div id='replyHeader'>" + replyList[i].replyer + "</div>"
 				replygetList += "<div style='color:gray;font-size:5px'>("+timeFormat(replyList[i].regTime)+")</div>"
 				replygetList += "<div id='replyBody'>" + replyList[i].reply 
+// 				replygetList += "<div id='replyBody'>" + "<c:out value='replyList[i].reply'/>" 
 				//로그인한 계정과, 댓글 작성자가 동일할경우 댓글수정 노출
 				if(replyList[i].replyer === '${userId}'){
 					replygetList += "<div class='btn-group content-function-group' style='float:right; padding:0 8px;font-size:16px'>"     				

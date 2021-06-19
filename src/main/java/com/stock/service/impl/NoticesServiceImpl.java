@@ -37,11 +37,8 @@ public class NoticesServiceImpl implements NoticesService {
 		
 		log.info("vo----" + vo);	
 		
-//		if(vo.getWriter().equals("test1234") || vo.getWriter().equals("test1111")) {		//관리자 계정	
 			mapper.noticesRegister(vo);
-//		}
-		
-		
+
 		//파일 bno가 form에 담겨옴 업데이트.
 		if(fileBno != null) {
 			
@@ -176,6 +173,7 @@ public class NoticesServiceImpl implements NoticesService {
 		if(userId != null) {
 			log.info("로그인 계정--" + userId);
 			vo.setUserId(userId);
+			log.info("vo----like" +vo);
 			
 			LikeCheck = mapper.noticesLike(vo);
 			

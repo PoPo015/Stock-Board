@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <script>
 
@@ -226,7 +227,7 @@ function googleSearch(){
                     </a>
                     
                     
-<%--                     <c:set var="userId" value="${userId}" /> --%>
+                    <c:set var="userId" value="${userId}" />
                     <c:choose>
                     
                     	<c:when test="${empty userId}">
@@ -243,9 +244,11 @@ function googleSearch(){
                     <ul class="dropdown-menu dropdown-user">
                         <li><i class="glyphicon glyphicon-user" style='padding-left: 23px'></i>&nbsp;&nbsp;${userId}
                         </li>
+                        <c:if test="${!fn:contains(userId,'(')}">
                         <li class="divider"></li>
                         <li><a href="/user/myPage"><i class="fa fa-gear fa-fw"></i> 마이페이지</a>
                         </li>
+                        </c:if>
                         <li class="divider"></li>
                         <li><a href="/user/logout"><i class="fa fa-sign-out fa-fw"></i> 로그아웃</a>
                         </li>

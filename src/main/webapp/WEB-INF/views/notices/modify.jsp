@@ -77,14 +77,13 @@
 										</div>
 										<input type="hidden" name="bno" value="${details.bno}">
 										<input type="hidden" name="writer" value="${details.writer}">
-										
+
 										<input type="file" id="file" name="file">
-										
+									</form>
 										<div style="float: right">
 											<button type="button" class="btn btn-success" onclick="registerClick()">수정</button>
 											<button type="button" class="btn btn-default" onclick="location.href='/notices/details/${details.bno}'">취소</button>
 										</div>
-									</form>
 
 								</div>
                             </div>

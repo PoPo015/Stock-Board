@@ -253,7 +253,7 @@ noticesBno number(10),
 userId varchar2(50),
 --noticesLikeCount number(10),
 LikeReg Date default sysdate,
-CONSTRAINT fk_userid_like FOREIGN KEY(userId) REFERENCES notices_user(user_id) on delete cascade,
+--CONSTRAINT fk_userid_like FOREIGN KEY(userId) REFERENCES notices_user(user_id) on delete cascade,
 CONSTRAINT fk_like_bno FOREIGN KEY(noticesBno) REFERENCES notices(bno) ON DELETE CASCADE
 )
 

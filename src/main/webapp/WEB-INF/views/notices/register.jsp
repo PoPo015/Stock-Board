@@ -74,15 +74,14 @@
 										</div>
 										
 										<input type="file" id="file" name="file">
-<!-- 										<input type="hidden" name="writer" value="관리자">  -->
 	
+									</form>
 										<div style="float: right">
-											<button type="button" class="btn btn-suwccess"
+											<button type="button" class="btn btn-success"
 												onclick="registerClick()">등록</button>
 											<button type="button" class="btn btn-default"
 												onclick="location.href='list'">취소</button>
 										</div>
-									</form>
 
 								</div>
                             </div>

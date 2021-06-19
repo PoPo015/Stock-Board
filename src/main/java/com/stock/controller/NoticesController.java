@@ -52,6 +52,7 @@ public class NoticesController {
 	@GetMapping("/register")
 	public void noticesRegister() {
 
+		
 	}
 	
 	//공지사항 작성
@@ -158,8 +159,6 @@ public class NoticesController {
 		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
 			return new ResponseEntity<NoticesReplyVo>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		
 		log.info("댓글 확인--" + vo);
 		service.noticesReply(vo);
 		

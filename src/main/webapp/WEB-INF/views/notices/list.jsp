@@ -81,7 +81,7 @@
 										<c:forEach items="${noticesList}" var="list">
 											<tr>
 												<td class="col-xs-1"><c:out value="${list.bno}"/></td>
-												<td class="col-xs-5"><a href="details/${list.bno}"><c:out value="${list.title}"/></a></td>
+												<td class="col-xs-5"><a href="details/${list.bno}">${list.title}</a></td>
 												<td class="col-xs-2"><c:out value="${list.writer}"/></td>
 												<td class="col-xs-4"><fmt:formatDate value="${list.regTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>	
 												<td class="col-xs-1"><c:out value="${list.replyCount}"/></td>
@@ -204,6 +204,7 @@
 
 
 <script>
+
 
 	//새글작성 버튼 클릭
 	function registerClick(){

@@ -2,11 +2,11 @@ package com.stock.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,12 +25,11 @@ public class SchedulerUtil {
 	
 	@Autowired
 	private UserMapper userMapper;
-	
-	
+					//비정상적으로 파일 등록 삭제
 					//초 분 시 일 월 요일 연도 (매월 1일 새벽3시동작) cron좀더 수정필요
 					//파일 삭제
 	@Scheduled(cron ="0 0 3 1 * *") 
-	public void nullFileRemove() {
+	private void nullFileRemove() {
 
 		System.out.println("1일입니다 잘못된 파일값들을 삭제합니다.");
 		
@@ -58,10 +57,11 @@ public class SchedulerUtil {
 		}
 		
 	}
-	
-	@Scheduled(cron = "0 0 0 * * *")
+				//회원탈퇴
+				//매일 새벽 00:00:00에 시작
 //	@Scheduled(cron = "30 * * * * *")
-	public void userWithdrawal() {
+	@Scheduled(cron = "0 0 0 * * *")
+	private void userWithdrawal(/* HttpServletRequest request */) {
 		
 		ArrayList<UserVo> arrayList = (ArrayList<UserVo>)userMapper.userWithrawalList();
 		BufferedReader in = null;
@@ -75,6 +75,9 @@ public class SchedulerUtil {
 			for(int i=0; i<arrayList.size(); i++) {
 				userMapper.userRemove(arrayList.get(i).getUserId());
 				System.out.println("유저 삭제완료");
+
+//				HttpSession session = request.getSession();			//세션정보 얻고 로그아웃
+//				session.invalidate();
 				
 				//일단 나중에처리
 //				try {

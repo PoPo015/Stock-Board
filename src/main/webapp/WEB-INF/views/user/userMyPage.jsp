@@ -92,7 +92,7 @@
 					     <div class="form-group">
 					       <div class="col-sm-offset-2 col-sm-10">
 					         <button type="button" class="btn btn-primary" id="createUser">정보 수정</button>
-					         <button type="button" class="btn btn-default">취소</button>
+					         <button type="button" class="btn btn-default" onclick="location.href='/notices/list'">취소</button>
 					       </div>
 					     </div>
 					   </form>
