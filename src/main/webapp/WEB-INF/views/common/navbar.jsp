@@ -32,9 +32,11 @@ function googleSearch(){
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
+                 <!-- 나중에 구현할때 주석풀기 
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
+                 !-->   
                     <ul class="dropdown-menu dropdown-messages">
                         <li>
                             <a href="#">
@@ -83,9 +85,12 @@ function googleSearch(){
                 </li>
                 <!-- /.dropdown -->
                 <li class="dropdown">
+                
+                <!-- 나중에 구현할때 주석풀기 
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
+                -->    
                     <ul class="dropdown-menu dropdown-tasks">
                         <li>
                             <a href="#">
@@ -282,13 +287,14 @@ function googleSearch(){
                         <li>
                             <a href="/notices/list"><i class="fa fa-dashboard fa-fw"></i> 공지사항</a>
                         </li>
+                        <!-- 구현할때 주석풀기 
                         <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i> 자유게시판</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i> 문의게시판</a>
                         </li>
-                        
+                        -->
 
 <!--                         <li> -->
 <!--                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a> -->

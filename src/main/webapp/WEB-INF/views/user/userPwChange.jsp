@@ -120,12 +120,12 @@ function pwChange(){
 		alert("비밀번호를 확인해주세요");
 		return false;
 	}
-	
-	if(!regExpPw.test($("newPassword").val())){
-		$("#newPaasword").focus();
-		alert("새 비밀번호를 확인해주세요. \n 비밀번호는 특수문자,영문자,숫자가 포함된 8글자 이상입니다.");
-		return false;
-	}
+//임시 주석	
+// 	if(!regExpPw.test($("newPassword").val())){
+// 		$("#newPaasword").focus();
+// 		alert("새 비밀번호를 확인해주세요. \n 비밀번호는 특수문자,영문자,숫자가 포함된 8글자 이상입니다.");
+// 		return false;
+// 	}
 	
 	if($("#newPassword").val() !== $("#passwordConfirm").val()){
 		$("#passwordConfirm").focus();

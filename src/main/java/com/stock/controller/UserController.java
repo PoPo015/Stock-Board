@@ -82,8 +82,19 @@ public class UserController {
 	//마이페이지
 	@GetMapping("/myPage")
 	public ModelAndView userMyPage(HttpSession session) {
-		log.info(service.userMyPage((String)session.getAttribute("userId")));
+		
+		String userId = ""+(String)session.getAttribute("userId");
 		ModelAndView mv = new ModelAndView();
+		
+		log.info("userId---" + userId);
+		
+		if(userId.equals("null")){
+			log.info("로그인안됬어요/ 비정상접근");
+			mv.setViewName("redirect:/notices/list");
+			return mv;
+		}
+		
+		log.info(service.userMyPage((String)session.getAttribute("userId")));
 		UserVo vo = service.userMyPage((String)session.getAttribute("userId"));
 
 		log.info("myPage vo----" + vo);
@@ -111,7 +122,13 @@ public class UserController {
 		
 	//비밀번호 변경 페이지
 	@GetMapping("/pwChange")
-	public String userPwChange() {
+	public String userPwChange(HttpSession session) {
+		String userId = ""+(String)session.getAttribute("userId");
+		
+		if(userId.equals("null")){
+			log.info("로그인안됬어요/ 비정상접근");
+			return "redirect:/notices/list";
+		}
 		
 		log.info("비밀번호 변경페이지");
 		return "/user/userPwChange";
@@ -196,7 +213,15 @@ public class UserController {
 
 	//회원탈퇴
 	@GetMapping("/withdrawal")
-	public String userWithdrawal() {
+	public String userWithdrawal(HttpSession session) {
+		
+		String userId = ""+(String)session.getAttribute("userId");
+		
+		if(userId.equals("null")){
+			log.info("로그인안됬어요/ 비정상접근");
+			return "redirect:/notices/list";
+		}
+		
 		log.info("회원탈퇴 페이지");
 		return "/user/userWithdrawal";
 	}
@@ -206,6 +231,14 @@ public class UserController {
 	@PostMapping("/withdrawal")
 	public String realUserWithdrawal(@RequestBody UserVo vo, HttpSession session) {
 	
+		String userId = ""+(String)session.getAttribute("userId");
+		
+		if(userId.equals("null")){
+			log.info("로그인안됬어요/ 비정상접근");
+			return "redirect:/notices/list";
+		}
+		
+		
 		log.info("회원탈퇴 vo ----" + vo);
 		vo.setUserId((String)session.getAttribute("userId"));
 		session.invalidate();             							//로그아웃
@@ -217,6 +250,13 @@ public class UserController {
 	@ResponseBody
 	@PostMapping("/withdrawalCancel")
 	public String userWithrawalCancel(@RequestBody UserVo vo, HttpSession session) {
+		
+		String userId = ""+(String)session.getAttribute("userId");
+		
+		if(userId.equals("null")){
+			log.info("로그인안됬어요/ 비정상접근");
+			return "redirect:/notices/list";
+		}
 		
 		log.info("회원탈퇴 철회 vo----"  + vo );
 		vo.setUserId((String)session.getAttribute("userId"));
