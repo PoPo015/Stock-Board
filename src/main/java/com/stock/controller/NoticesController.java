@@ -150,13 +150,15 @@ public class NoticesController {
 	public ResponseEntity<NoticesReplyVo> reply(@RequestBody NoticesReplyVo vo, HttpSession session) {
 		
 		String reply = vo.getReply();
-		String replyer = vo.getReplyer();
+		String replyer = (String)session.getAttribute("userId");
+		
+		log.info("replyer----" + replyer);
 		//제목값이 공백 / null / 길이가 0일경우
 		if(reply.length() == 0 || reply.equals(" ") || reply.equals("null")) {
 			return new ResponseEntity<NoticesReplyVo>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		//내용값이 공백 / null /길이가0일경우
-		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
+		//로그인계정이  null 일경우
+		if(replyer.equals("null")) {
 			return new ResponseEntity<NoticesReplyVo>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		log.info("댓글 확인--" + vo);
@@ -179,22 +181,22 @@ public class NoticesController {
 	//공지사항 댓글 수정
 	@ResponseBody
 	@PostMapping(value="/replyModify")
-	public String replyModify(@RequestBody NoticesReplyVo vo) {
+	public String replyModify(@RequestBody NoticesReplyVo vo, HttpSession session) {
 		
 		String reply = vo.getReply();
-		String replyer = vo.getReplyer();
+		String replyer = (String)session.getAttribute("userId");
 		
 		//제목값이 공백 / null / 길이가 0일경우
 		if(reply.length() == 0 || reply.equals(" ") || reply.equals("null")) {
 			return "error";
 		}
-		//내용값이 공백 / null /길이가0일경우
-		if(replyer.length() == 0 || replyer.equals(" ") || replyer.equals("null")) {
+		//로그인값이 null 0일경우
+		if(replyer.equals("null")) {
 			return "error";
 		}
 		
-		
 		log.info("댓글수정 vo---" + vo);
+		vo.setReplyer(replyer);
 		service.noticesReplyModify(vo);
 		
 		return "success";
@@ -203,12 +205,20 @@ public class NoticesController {
 	//공지사항 댓글삭제
 	@ResponseBody
 	@PostMapping(value="/replyDelete/{rno}")
-	public void replyDelete(@PathVariable("rno") int rno) {
+	public String replyDelete(@PathVariable("rno") int rno, HttpSession session) {
+		
+		String replyer = (String)session.getAttribute("userId");
+		
+		//로그인값이 null 0일경우
+		if(replyer.equals("null")) {
+			return "error";
+		}
 		
 		log.info("rno----" + rno);
 		
-		service.noticesReplyDelete(rno);
+		service.noticesReplyDelete(rno, session);
 	
+		return "success";
 	}
 	
 	//좋아요

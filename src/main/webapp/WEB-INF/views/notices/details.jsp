@@ -400,6 +400,8 @@ function dislike(){
 				"replyer" : "${userId}"
 			}),
 			success: function(data){
+				console.log(data);
+				
 				$("#reply").val('');					//댓글 등록후, 등록 칸 지움
 				let replyList = JSON.parse(data);		//서버 String 타입의 vo객체를 object형식으로 변환
 				console.log("댓글등록성공" + replyList.reply);
@@ -424,6 +426,7 @@ function dislike(){
 			},
 			error: function (request, status, error){
 				console.log("댓글등록실패");
+				alert("댓글 등록 실패");
 			}
 		});
 	})
@@ -492,8 +495,12 @@ function dislike(){
 				url: "/notices/replyDelete/"+rno+"",
 				type: "post",
 				success: function(data){
-					console.log("댓글 삭제 성공");
-					replyList();
+					if(data === "success"){
+						console.log("댓글 삭제 성공");
+						replyList();
+					}else if(data === "error"){
+						alert("댓글삭제 실패");
+					}
 				},
 				error: function (request, status, error){
 					console.log("댓글 삭제 실패");

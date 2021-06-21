@@ -45,7 +45,7 @@ public interface NoticesService {
 	public void noticesReplyModify(NoticesReplyVo vo);
 	
 	//댓글삭제
-	public void noticesReplyDelete(int rno);
+	public void noticesReplyDelete(int rno, HttpSession session);
 	//좋아요
 	public String noticesLike(NoticesLikeAndDislike vo, HttpSession session);
 	//좋아요 취소

@@ -40,7 +40,7 @@ public interface NoticesMapper {
 	public void noticesReplyModify(NoticesReplyVo vo);
 
 	//댓글 삭제
-	public void noticesReplyDelete(int rno);
+	public void noticesReplyDelete(NoticesReplyVo vo);
 
 	//게시글 조회수 +1
 	public void viewsCount(int bno);

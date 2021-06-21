@@ -154,9 +154,14 @@ public class NoticesServiceImpl implements NoticesService {
 	}
 
 	@Override
-	public void noticesReplyDelete(int rno) {
-
-		mapper.noticesReplyDelete(rno);
+	public void noticesReplyDelete(int rno,HttpSession session) {
+		
+		NoticesReplyVo vo = new NoticesReplyVo();
+		vo.setRno(rno);
+		vo.setReplyer((String) session.getAttribute("userId"));
+		
+		log.info("댓글삭제 vo--" + vo);
+		mapper.noticesReplyDelete(vo);
 
 	}
 

@@ -84,13 +84,13 @@
 	<!-- 공지사항 업데이트 -->
 	<update id="noticesReplyModify" parameterType="com.stock.domain.NoticesReplyVo">
 	UPDATE NOTICESREPLY SET
-	REPLY = #{reply} WHERE RNO = #{rno}
+	REPLY = #{reply} WHERE RNO = #{rno} AND REPLYER = #{replyer}
 	</update>
 	
 	<!-- 댓글삭제 -->
-	<delete id="noticesReplyDelete" parameterType="int">
+	<delete id="noticesReplyDelete" parameterType="com.stock.domain.NoticesReplyVo">
 	DELETE FROM NOTICESREPLY
-	WHERE RNO =#{rno}
+	WHERE RNO =#{rno} AND REPLYER = #{replyer}
 	</delete>
 	
 	<!-- 게시글 조회수 +1 -->

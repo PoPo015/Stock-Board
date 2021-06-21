@@ -252,11 +252,22 @@ public class UserServiceImpl implements UserService {
 	        
 	        JsonObject response = (JsonObject)jObject.get("response");
 	        //네이버는 "아이디값" 이런식으로 뽑혀져서 문자열 자르기함
- 	        vo.setUserId((String)response.get("id").toString().substring(1,response.get("id").toString().length()-1));
-	        vo.setUserNick("(naver)" + (String)response.get("nickname").toString().substring(1,response.get("nickname").toString().length()-1));
-	        vo.setUserEmail((String)response.get("email").toString().substring(1,response.get("email").toString().length()-1));
-	        vo.setUserPhone((String)response.get("mobile").toString().substring(1,response.get("mobile").toString().length()-1));
-	        vo.setUserNm((String)response.get("name").toString().substring(1,response.get("name").toString().length()-1));
+	        String userId = ((String)response.get("id").toString().substring(1,response.get("id").toString().length()-1));
+	        log.info("userId---" + userId);
+	        String userNick = ("(naver)" + (String)response.get("nickname").toString().substring(1,response.get("nickname").toString().length()-1));
+	        log.info("userNick---" + userNick);
+ 	        String userEmail = ((String)response.get("email").toString().substring(1,response.get("email").toString().length()-1));
+ 	        log.info("userEmail---" + userEmail);
+	        String userPhone = (String)response.get("mobile").toString().substring(1,response.get("mobile").toString().length()-1);
+	        log.info("userPhone---" + userPhone);
+	        String UserNm = (String)response.get("name").toString().substring(1,response.get("name").toString().length()-1);
+	        log.info("setUserNm---" + UserNm);
+	       
+	        vo.setUserId(userId);
+	        vo.setUserNick(userNick);
+	        vo.setUserEmail(userEmail);
+	        vo.setUserPhone(userPhone);
+	        vo.setUserNm(UserNm);
 	        vo.setProVider("naver");
 	        log.info("vo --" + vo);
 	        
