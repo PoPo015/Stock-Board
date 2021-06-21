@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.GeneralSecurityException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -52,12 +53,11 @@ public class UserController {
 		
 		String result = service.userLogin(vo);
 		
-		
 		if(result.equals("로그인 성공")) {
 			log.info("로그인성공");
 			session.setAttribute("userId", vo.getUserId());
 			mv.setViewName("redirect:/notices/list");
-				
+
 			return mv;
 		}else {
 			log.info("로그인 실패");

@@ -1,25 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
-<%@include file="../common/common.jsp" %>
-
+<%@ include file="../common/common.jsp"%>
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
-	
+<meta charset="UTF-8">
+<title>Insert title here</title>
    <style>
+      div.row {
+        width: 100%;
+        display: flex;
+        border: 1px solid #003458;
+      }
       div.left {
         width: 45%;
-  	    height:45%;
+      height:45%;
         float: left;
         box-sizing: border-box;
       }
@@ -38,83 +33,65 @@
       }
     </style>
 </head>
-
 <body>
 
-    <div id="wrapper">
-	
-	<!-- 네비게이션바 -->
-	<%@include file="../common/navbar.jsp" %>
-        <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">* 파이썬(크롤링)과 스프링 ajax 통신을 사용한 주식 VI 실시간 데이터 *</h1>
-                    <h4>https://t.me/joinchat/rEavK_TGMm9kYTg1          --(텔레그램 API 실시간 전송)</h4> 
-                    
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-						<div class="panel-body">
-							<div class="left table-responsive" id="StockList">
-							  <table class="table">
-								    <thead>
-								      <tr>
-								        <th scope="col">번호</th>
-								        <th scope="col">종목코드</th>
-								        <th scope="col">종목명</th>
-								        <th scope="col">발동가격</th>
-								        <th scope="col">상승률</th>
-								        <th scope="col">발동시간</th>
-								        <th scope="col">해제시각</th>
-								      </tr>
-								    </thead>
-								    <tbody id="tbody">
-								  	  <tr id="test">
-									     <td id="stk_id"></td>
-									     <td id="stk_cd"></td>
-									     <td id="stk_nm"></td>
-									     <td id="stk_pri"></td> 
-									     <td id="stk_inc"></td>
-									     <td id="stk_act"></td>
-									     <td id="stk_rel"></td>                          
-								 	  </tr>
-								    </tbody>
-							  </table>
-							</div>
-						
-						<div class="right table-responsive" id="StockNewsList">
-							<table class="table">
-							    <thead>
-							      <tr>
-							        <th scope="col">기사제목</th>
-							        <th scope="col">시간</th>
-							      </tr>
-							    </thead>
-							    <tbody id="tbody">
-							     <tr>
-							    	<td id="news_content"></td>  
-							    	<td id="news_time"></td>                          
-							     </tr>
-							</table>
-						</div>
+<%--     <%@include file="../common/navbar.jsp" %>  --%>
 
-						</div>
-                    </div>
-                </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+<div>   
+<h3>* 파이썬(크롤링)과 스프링 ajax 통신을 사용한 주식 VI 실시간 데이터 *</h3>
+<div>https://t.me/joinchat/rEavK_TGMm9kYTg1          --(텔레그램 API 실시간 전송) </div>
+<!-- <button id="test" onclick="ajaxcli2()">클릭</button> -->
+<!--    <input type="checkbox" id="check" onclick="reload();" checked="checked"> 10초마다 새로고침 -->
 
-        </div>
-        <!-- /#page-wrapper -->
 
-    </div>
-    <!-- /#wrapper -->
+<div class="left table-responsive" id="StockList">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">번호</th>
+        <th scope="col">종목코드</th>
+        <th scope="col">종목명</th>
+        <th scope="col">발동가격</th>
+        <th scope="col">상승률</th>
+        <th scope="col">발동시간</th>
+        <th scope="col">해제시각</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+    <tr id="test">
+     <td id="stk_id"></td>
+     <td id="stk_cd"></td>
+      <td id="stk_nm"></td>
+     <td id="stk_pri"></td> 
+     <td id="stk_inc"></td>
+     <td id="stk_act"></td>
+     <td id="stk_rel"></td>                          
+   </tr>
+    </tbody>
+  </table>
+</div>
 
+<div class="right table-responsive" id="StockNewsList">
+  <table class="table">
+    <thead>
+      <tr>
+     <!--    <th scope="col">기사제목</th>  -->
+        <th scope="col">기사제목</th>
+        <th scope="col">시간</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+    <tr>
+   <!--    <td id="news_title"></td>-->
+    <td id="news_content"></td>  
+     <td id="news_time"></td>                          
+   </tr>
+  </table>
+</div>
+
+</div>
+
+ 
 <script>
 $( document ).ready(function() {
 
@@ -221,6 +198,10 @@ $( document ).ready(function() {
     
 
 </script>
+
+
+
+
 </body>
 
 </html>
