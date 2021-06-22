@@ -113,4 +113,17 @@
 	/* 구글 계정 회원가입 */
 	</insert>
 	
+	<update id="keepLogin" parameterType="java.util.HashMap">
+	update notices_user 
+    set session_key = #{sessionId}, session_limit = #{sessionLimit} where user_id =#{userId}
+    /* 로그인기억하기 */
+	</update>
+
+	<select id="checkLoginBefore" resultType="com.stock.domain.UserVo" parameterType="String">
+		<![CDATA[
+	    select user_id as userid from notices_user where session_key = #{cookieValue} and session_limit > (SELECT SYSDATE FROM DUAL)
+		]]>
+		/* 쿠키가 있는지 검색 */
+	</select>
+	
 </mapper>

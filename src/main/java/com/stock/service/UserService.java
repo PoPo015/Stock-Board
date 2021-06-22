@@ -2,6 +2,7 @@ package com.stock.service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,11 @@ public interface UserService {
 	public String userKakao(UserVo vo);
 	//구글 로그인
 	public UserVo userNaver(String accessToken);
-
+	//네이버 로그인
 	public UserVo userGoogle(String accessToken) throws GeneralSecurityException, IOException;
+	//자동로그인 쿠키 업데이트
+	public void keepLogin(String userId, String sessionId, Date sessionLimit);
+	//쿠키값이 있는 지확인
+	public UserVo checkLoginBefore(String cookieValue);
+
 }

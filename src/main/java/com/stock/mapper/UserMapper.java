@@ -1,6 +1,8 @@
 package com.stock.mapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -39,5 +41,9 @@ public interface UserMapper {
 	public void userNaver(UserVo vo);
 	//google 회원가입
 	public void userGoogle(UserVo vo);
+	//자동로그인 쿠키 업데이트
+	public void keepLogin(HashMap<String, Object> sessionCookie);
+	//쿠키값이 있는 지확인
+	public UserVo checkLoginBefore(String cookieValue);
 	
 }

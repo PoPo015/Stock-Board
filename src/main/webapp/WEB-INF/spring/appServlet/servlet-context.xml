@@ -27,6 +27,11 @@
 	<!-- 	스케줄러 사용 -->
 	<task:annotation-driven/>
 	
-	
+	<interceptors>
+		<interceptor>
+			<mapping path="/user/login" />
+			<beans:bean class="com.stock.util.RememberMeInterceptor" />
+		</interceptor>
+	</interceptors>
 	
 </beans:beans>

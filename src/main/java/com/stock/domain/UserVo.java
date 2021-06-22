@@ -9,6 +9,7 @@ public class UserVo {
 	
 	private String userId;				//아이디
 	private String userPw;				//패스워드
+	private boolean rememberMe;			//로그인유지
 	private String newPassword;			//새로운비밀번호
 	private String userNm;				//이름
 	private String userNick;			//닉네임

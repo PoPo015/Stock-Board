@@ -215,6 +215,8 @@ ALTER TABLE notices_user ADD CONSTRAINT pk_userid PRIMARY KEY (user_id)   -- PK�
 Alter table notices_user add provider varchar2(10) default 'local'         --가입경로
 alter table notices_user add(user_nick varchar2(50))                        --닉네임컬럼추가
 alter table notices_user modify(user_id varchar2(50))                          
+alter table notices_user add session_key varchar2(50) default 'none'        --세션 아이디보관
+alter table notices_user add session_limit timestamp                        --세션 유효시간 기록
 
 		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_ID = 'abc'
         

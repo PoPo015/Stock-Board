@@ -3,10 +3,12 @@ package com.stock.service.impl;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -328,6 +330,24 @@ public class UserServiceImpl implements UserService {
 			  System.out.println("Invalid ID token.");
 			}
 		return vo;
+	}
+
+	@Override
+	public void keepLogin(String userId, String sessionId, Date sessionLimit) {
+		log.info("userId---" + userId);
+		log.info("sessionId---" + sessionId);
+		log.info("sessionLimit---" + sessionLimit);
+		
+		HashMap<String, Object> sessionCookie = new HashMap<String, Object>();
+		sessionCookie.put("userId", userId);
+		sessionCookie.put("sessionId",sessionId);
+		sessionCookie.put("sessionLimit", sessionLimit);
+		mapper.keepLogin(sessionCookie);
+	}
+
+	@Override
+	public UserVo checkLoginBefore(String cookieValue) {
+		return mapper.checkLoginBefore(cookieValue);
 	}
 
 }

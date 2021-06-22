@@ -3,6 +3,7 @@ package com.stock.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.GeneralSecurityException;
+import java.util.Date;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 
 import com.stock.domain.UserVo;
 import com.stock.service.UserService;
@@ -39,14 +41,14 @@ public class UserController {
 	public String login() {
 		
 		log.info("로그인페이지---");
-		
+
 		return "/user/userLogin";
 		
 	}
 	
 	//로그인 Post
 	@PostMapping("/login")
-	public ModelAndView loginPost(UserVo vo, HttpSession session) throws IOException {
+	public ModelAndView loginPost(UserVo vo, HttpServletResponse response,HttpSession session) throws IOException {
 
 		log.info("로그인시도합니다 Controller----" + vo);
 		ModelAndView mv = new ModelAndView();
@@ -54,10 +56,22 @@ public class UserController {
 		String result = service.userLogin(vo);
 		
 		if(result.equals("로그인 성공")) {
+			//자동 로그인 유지 체크
+			if(vo.isRememberMe()) {
+				log.info("자동 로그인 유지");
+				Cookie loginCookie = new Cookie("loginCookie", session.getId());
+				log.info("cookie---" + loginCookie.getValue());
+				loginCookie.setPath("/");
+				loginCookie.setMaxAge(60*60*24*7);
+				response.addCookie(loginCookie);
+				int amount = 60 * 60 * 24 * 7;
+				Date sessionLimit = new Date(System.currentTimeMillis() + (1000 * amount));
+				service.keepLogin(vo.getUserId(), loginCookie.getValue(), sessionLimit);
+			}
+			
 			log.info("로그인성공");
 			session.setAttribute("userId", vo.getUserId());
 			mv.setViewName("redirect:/notices/list");
-
 			return mv;
 		}else {
 			log.info("로그인 실패");
@@ -72,10 +86,24 @@ public class UserController {
 	
 	//로그아웃
 	@GetMapping("/logout")
-	public static String userLogout(HttpSession session) {
+	public String userLogout(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		log.info("계정 로그아웃합니다");
-		session.invalidate();
-	
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+		
+		//쿠키삭제
+		if(loginCookie != null) {
+			log.info("쿠키값있다 쿠키도 삭제합니다-----"+loginCookie);
+			loginCookie.setPath("/");
+			loginCookie.setMaxAge(0);
+			response.addCookie(loginCookie);
+			log.info("getAttribute--"+session.getAttribute("userId"));
+			service.keepLogin((String)session.getAttribute("userId"), "none", new Date());
+		}
+		//세션삭제
+		if(session.getAttribute("userId") != null) {
+			log.info("로그아웃 세션--" + session.getAttribute("userId"));
+			session.invalidate();
+		}
 		return "redirect:/notices/list";
 	}
 	

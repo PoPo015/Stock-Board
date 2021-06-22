@@ -62,8 +62,8 @@
 
 					     <div class="form-group">
 					       <div class="col-md-6 col-md-offset-3">
-					       <label for="remember_me">
-							 <input type="checkbox" id="remember_me">로그인유지
+					       <label for="rememberMe">
+							 <input type="checkbox" id="rememberMe" name="rememberMe" value="true">로그인유지
 						   </label>
 							 <br>
 					         <button type="submit" class="btn btn-primary" id="loginClick"style='padding: 6px 95px'>로그인</button>
@@ -74,8 +74,6 @@
 						</div>
 					         
 					       </div>
-
-					       
 					     </div>
 					   </form>
                         </div>
