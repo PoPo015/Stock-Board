@@ -39,7 +39,6 @@ public class UserController {
 	//로그인 페이지
 	@GetMapping("/login")
 	public String login() {
-		
 		log.info("로그인페이지---");
 
 		return "/user/userLogin";
@@ -290,6 +289,27 @@ public class UserController {
 		vo.setUserId((String)session.getAttribute("userId"));
 		
 		return service.userWithrawalCancel(vo);
+	}
+	//유저 아이디 찾기
+	@GetMapping("/userFindId")
+	public void userFindId() {
+		log.info("유저 아이디찾기 페이지--");
+	}
+	
+	//유저 아이디 찾기
+	@ResponseBody
+	@PostMapping("/userFindId")
+	public String userFindIdPost(UserVo vo) throws Exception {
+	
+		log.info("FindId Vo----" + vo);
+		
+		return service.userFindIdPost(vo);
+		
+	}
+
+	@GetMapping("/userFindPw")
+	public void userFindPw() {
+		log.info("유저 비밀번호찾기 페이지--");
 	}
 	
 	//카카오 로그인

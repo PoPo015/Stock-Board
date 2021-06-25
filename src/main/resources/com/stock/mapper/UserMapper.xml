@@ -26,6 +26,12 @@
 	/* Email 중복체크 */
 	</select>
 
+	<select id ="userNameAndEmailCheck" resultType="int" parameterType="com.stock.domain.UserVo">
+		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_NAME = #{userNm} AND USER_EMAIL = #{userEmail}
+
+	/* ID , Email 중복체크 */
+	</select>
+
 	<insert id="userCreate" parameterType="com.stock.domain.UserVo">
 	INSERT INTO NOTICES_USER(USER_ID, USER_PW, USER_NAME, USER_PHONE, USER_ADDRESS_ZIP_CODE, USER_ADDRESS_ROAD_NAME, USER_ADDRESS_DETAILED, USER_EMAIL, USER_IP)
 	VALUES (#{userId}, #{userPw}, #{userNm},#{userPhone}, #{addressZipCode}, #{addressRoadName}, #{addressDetailed}, #{userEmail}, #{userIp})

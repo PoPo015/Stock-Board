@@ -68,8 +68,10 @@
 							 <br>
 					         <button type="submit" class="btn btn-primary" id="loginClick"style='padding: 6px 95px'>로그인</button>
 						<div>
-					       <a href="#">계정찾기</a>
+					       <a href="/user/userFindId">아이디 찾기</a>
 					       <span>/</span>
+					       <a href="/user/userFindPw">비밀번호 찾기</a>
+					       	<span>/</span>
 					       <a href="/user/create">회원가입</a>
 						</div>
 					         

@@ -75,7 +75,7 @@
 		<!-- json타입 필터 -->
 		<filter>
 	  		<filter-name>RequestBodyXSSFilter</filter-name>
-	  		<filter-class>com.stock.security.RequestBodyXSSFIleter</filter-class>
+	  		<filter-class>com.stock.filter.RequestBodyXSSFIleter</filter-class>
 		</filter>
 	
 	    <filter-mapping>

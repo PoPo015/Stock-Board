@@ -45,5 +45,6 @@ public interface UserMapper {
 	public void keepLogin(HashMap<String, Object> sessionCookie);
 	//쿠키값이 있는 지확인
 	public UserVo checkLoginBefore(String cookieValue);
-	
+	//이름 이메일 체크
+	public int userNameAndEmailCheck(UserVo vo);
 }

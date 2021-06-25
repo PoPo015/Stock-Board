@@ -224,6 +224,13 @@ alter table notices_user add session_limit timestamp                        --¼¼
     
     		select user_id,user_name,user_phone,user_address_zip_code,user_address_road_name,user_address_detailed,user_email from notices_user where user_id= 'test1234'
             update notices_user set user_name ='123' ,user_phone ='123' ,user_address_zip_code= , user_address_road_name = ,user_address_detailed = ,user_email =  where user_id = 
+
+    update notices_user 
+    set session_key = '123' where user_id ='test1234'
+
+    select * from notices_user where session_key = '11766CA1F324D7356C66A1B4C8BA915B' and session_limit > (SELECT SYSDATE FROM DUAL)
+    
+	    select user_id as userid from notices_user where session_key = '6FA648767F0A5B0B928E694D86FD4E53'
 ----È¸¿øÅ»Åð Å×ÀÌºí----
 create table notcies_user_withdrawl(
 user_id varchar2(30),

@@ -1,8 +1,6 @@
-package com.stock.security;
+package com.stock.filter;
 
 import java.io.IOException;
-
-
 
 import javax.servlet.Filter;
 
@@ -20,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-
-
 public class RequestBodyXSSFIleter implements Filter {
 
 	@Override
@@ -30,35 +26,34 @@ public class RequestBodyXSSFIleter implements Filter {
 
 			throws IOException, ServletException {
 
-		HttpServletRequest request = (HttpServletRequest)req;
+		HttpServletRequest request = (HttpServletRequest) req;
 
- 		HttpServletResponse response = (HttpServletResponse)res;
+		HttpServletResponse response = (HttpServletResponse) res;
 
- 		RequestWrapper requestWrapper = null;
- 		System.out.println("xss필터생성");
- 		try{
+		RequestWrapper requestWrapper = null;
+		System.out.println("xss필터생성");
+		try {
 
- 			requestWrapper = new RequestWrapper(request);
+			requestWrapper = new RequestWrapper(request);
 
- 		}catch(Exception e){
+		} catch (Exception e) {
 
- 			e.printStackTrace();
+			e.printStackTrace();
 
- 		}
+		}
 
- 		chain.doFilter(requestWrapper, response);
+		chain.doFilter(requestWrapper, response);
 
 	}
 
 	@Override
 
-	public void init(FilterConfig filterConfig) throws ServletException {}
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
 	@Override
 
-	public void destroy() {}
+	public void destroy() {
+	}
 
 }
-
-
-
