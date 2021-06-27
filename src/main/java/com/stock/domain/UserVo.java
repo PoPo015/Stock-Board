@@ -22,4 +22,5 @@ public class UserVo {
 	private String proVider;			//회원가입 경로
 	private Date userRegWithdrawal; 	//회원탈퇴날짜
 	private String idToken; 			//구글 sns 토큰ID
+	private int certification;			//인증번호
 }

@@ -38,16 +38,17 @@
 	</logger>
 	
 	
+	<logger name="jdbc.sqlonly" additivity="false"> 
+		<level value="info"/> 
+		<appender-ref ref="console"/> 
+	</logger>
+
 		<!-- SQL Logger  필요할때 주석지워 확인
 	<logger name="jdbc.sqltiming" additivity="false">
 		<level value="warn" />
 		<appender-ref ref="console"/> 
 	</logger>
 
-	<logger name="jdbc.sqlonly" additivity="false"> 
-		<level value="info"/> 
-		<appender-ref ref="console"/> 
-	</logger>
 
 	<logger name="jdbc.audit" additivity="false"> 
 		<level value="warn"/>  

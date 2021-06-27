@@ -312,6 +312,64 @@ public class UserController {
 		log.info("유저 비밀번호찾기 페이지--");
 	}
 	
+	
+	@ResponseBody
+	@PostMapping("/userFindPw")
+	public String userFindPwPost(UserVo vo) throws Exception {
+		log.info("유저 비밀번호찾기 페이지--");
+		log.info("vo---" + vo);
+		
+		return service.userFindPwPost(vo);
+	}
+	
+	@ResponseBody
+	@PostMapping("/mailCertification")
+	public String usermailCertification(UserVo vo,HttpSession session) throws Exception {
+		log.info("vo---" +vo);
+		
+		String result = service.usermailCertification(vo);
+		if(result.equals("success")) {
+			session.setAttribute("userPwChange", vo.getUserId());
+			
+			return "success";
+		}
+		
+		return "error";
+	}
+	
+	@GetMapping("/userFindPwChange")
+	public void userFindChg() throws IOException {
+		log.info("비밀번호 찾기 / 변경페이지");
+	}
+	
+	@PostMapping("/userFindPwChange")
+	public void userFindChgPost(UserVo vo,HttpSession session, HttpServletResponse response) throws IOException {		
+		
+		String userFindPwChange = (String)session.getAttribute("userPwChange");
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		
+		if(userFindPwChange == null) {
+			out.println("<script>alert('비정상적인 접근입니다'); location.href='/notices/list';</script>");
+			out.flush();
+		}
+		
+		vo.setUserId(userFindPwChange);
+		
+		String pwChk = service.userFindPwChange(vo);
+
+		if(pwChk.equals("비밀번호 수정 성공")) {
+			session.invalidate();
+			out.println("<script>alert('비밀번호 수정 성공'); location.href='/user/login';</script>");
+			out.flush();
+		}else if(pwChk.equals("비밀번호 수정 실패")) {
+			out.println("<script>alert('비밀번호 수정 실패');</script>");
+			out.flush();
+		}
+		
+	}
+		
+	
 	//카카오 로그인
 	@ResponseBody
 	@PostMapping("/kakaoLogin")

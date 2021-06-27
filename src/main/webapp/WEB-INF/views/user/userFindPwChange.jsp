@@ -21,6 +21,10 @@
 <body>
     <div id="wrapper">
 
+	<c:if test="${empty userPwChange}">
+		<c:redirect url="/notices/list" />
+	</c:if>
+
 	<!-- 네비게이션바 -->
 	<%@include file="../common/navbar.jsp" %>
 
@@ -61,12 +65,9 @@
 
 	<div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default panel-margin-10">
-        <form id="frm" action="/user/pwChange" method="post">
+        <form id="frm" action="/user/userFindPwChange" method="post">
             <div class="panel-body panel-body-content text-center">
                 <p class="lead">변경하실 비밀번호를 입력해 주세요.</p>
-                <div class="form-group">
-                    <input type="password" name="userPw" id="userPw" class="form-control form-control-inline text-center" placeholder="현재 비밀번호">
-                </div>
                 <div class="form-group">
                     <input type="password" name="newPassword" id="newPassword" class="form-control form-control-inline text-center" placeholder="새 비밀번호">
                 </div>
@@ -74,7 +75,7 @@
                     <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control form-control-inline text-center" placeholder="새 비밀번호 확인">
                 </div>
                 <button type="button" class="btn btn-primary" onclick="pwChange()">비밀번호 변경</button> 
-                <a href="/user/myPage" class="btn btn-default">취소</a>
+                <a href="/notices/list" class="btn btn-default">취소</a>
             </div>
        </form>
         </div>
@@ -115,11 +116,6 @@ var regExpPw = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/; // 
 	//공백 검증 코드 필요
 function pwChange(){
 
-	if(!regExpPw.test($("#userPw").val())){
-		$("#userPw").focus();
-		alert("비밀번호를 확인해주세요");
-		return false;
-	}
 //임시 주석	
 	if(!regExpPw.test($("#newPassword").val())){
 		$("#newPaasword").focus();
@@ -137,7 +133,6 @@ function pwChange(){
 }
 
 </script>
-
 
 </body>
 

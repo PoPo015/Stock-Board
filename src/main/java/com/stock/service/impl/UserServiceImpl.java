@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import javax.mail.internet.MimeMessage;
@@ -358,13 +359,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String userFindIdPost(UserVo vo) throws Exception {
 		//유저 아이디 이메일 있는지 체크.
-		int checkCnt = mapper.userNameAndEmailCheck(vo);
-			
-			if(checkCnt == 1) {
-				log.info("유저 아이디와 이메일이 일치하는게 있다. 이메일 인증번호 생성을하고, return 합시다~");
+		UserVo checkCnt = mapper.userNameAndEmailCheck(vo);
+		
+		log.info("check----" + checkCnt);
+		
+			if(checkCnt != null) {
+				log.info("유저 아이디와 이메일이 일치하는게 있다. 아이디를 이메일로 전송합니다.");
 				
-				String subject = "test 메일";
-				String content = "메일 테스트 내용" + "<img src=\"https://t1.daumcdn.net/cfile/tistory/214DCD42594CC40625\">";
+				String subject = "PoPo 아이디 찾기";
+				String content = "아이디는: " + checkCnt.getUserId() + " 입니다."; //"<img src=\"https://t1.daumcdn.net/cfile/tistory/214DCD42594CC40625\">"; 이미지추가
 				String from = "kst005103@gmail.com";
 		        String to = vo.getUserEmail();
 		        
@@ -402,6 +405,95 @@ public class UserServiceImpl implements UserService {
 		
 		
 		return "error";
+	}
+
+	@Override
+	public String userFindPwPost(UserVo vo) throws Exception {
+
+		UserVo check = mapper.userNameAndEmailCheck(vo);
+		
+		log.info("check--" + check);
+	
+		if(check != null) {
+			Random ran = new Random();
+			check.setCertification((ran.nextInt(888888)+111111));	//랜덤번호 주입
+			mapper.userCertification(check);						//db에저장
+			String subject = "PoPo 비밀번호 찾기";
+			String content = "인증번호는: " + check.getCertification() + " 입니다."; //"<img src=\"https://t1.daumcdn.net/cfile/tistory/214DCD42594CC40625\">"; 이미지추가
+			String from = "kst005103@gmail.com";
+	        String to = vo.getUserEmail();
+	        
+	        try {
+	            MimeMessage mail = mailSender.createMimeMessage();
+	            MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
+	            // true는 멀티파트 메세지를 사용하겠다는 의미
+	            
+	            /*
+	             * 단순한 텍스트 메세지만 사용시엔 아래의 코드도 사용 가능 
+	             * MimeMessageHelper mailHelper = new MimeMessageHelper(mail,"UTF-8");
+	             */
+	            
+	            mailHelper.setFrom(from);
+	            // 빈에 아이디 설정한 것은 단순히 smtp 인증을 받기 위해 사용 따라서 보내는이(setFrom())반드시 필요
+	            // 보내는이와 메일주소를 수신하는이가 볼때 모두 표기 되게 원하신다면 아래의 코드를 사용하시면 됩니다.
+	            //mailHelper.setFrom("보내는이 이름 <보내는이 아이디@도메인주소>");
+	            mailHelper.setTo(to);
+	            mailHelper.setSubject(subject);
+	            mailHelper.setText(content, true);
+	            // true는 html을 사용하겠다는 의미입니다.
+	            
+	            /*
+	             * 단순한 텍스트만 사용하신다면 다음의 코드를 사용하셔도 됩니다. mailHelper.setText(content);
+	             */
+	            
+	            mailSender.send(mail);
+	            
+	        } catch(Exception e) {
+	            e.printStackTrace();
+	        }
+			
+			
+			return "success";
+		}
+
+		return "error";
+		
+	}
+
+	@Override
+	public String usermailCertification(UserVo vo) {
+		
+		int check = mapper.userMailCertification(vo);
+		log.info("check---" + check);
+		if(check == 1) {
+			log.info("인증번호 1 입니다 db에서 삭제합니다");
+			mapper.userMailDelete(vo);
+			
+			return "success";
+		}
+		
+		return "error";
+	}
+
+	@Override
+	public String userFindPwChange(UserVo vo) {
+		
+		String regPw = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,12}$";		//정규식 (영문, 숫자, 특수문자 조합, 9~12자리)
+		String hashPassword = BCrypt.hashpw(vo.getNewPassword(), BCrypt.gensalt());		//패스워드 암호화
+
+		log.info("서비스 vo--" + vo);
+		
+		log.info("hashnew---" + hashPassword);
+		if(Pattern.matches(regPw, vo.getNewPassword())) {
+			mapper.userPwChange(vo.getUserId(), hashPassword);
+			return "비밀번호 수정 성공";
+		}
+		
+		log.info("비밀번호가 null이거나 , 정규식패턴에 맞지않음");
+			return "비밀번호 수정 실패";
+
+	
+	
 	}
 
 }

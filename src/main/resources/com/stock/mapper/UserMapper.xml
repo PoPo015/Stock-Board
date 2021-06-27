@@ -26,9 +26,10 @@
 	/* Email 중복체크 */
 	</select>
 
-	<select id ="userNameAndEmailCheck" resultType="int" parameterType="com.stock.domain.UserVo">
-		SELECT COUNT(*) FROM NOTICES_USER WHERE USER_NAME = #{userNm} AND USER_EMAIL = #{userEmail}
-
+	<select id ="userNameAndEmailCheck" resultMap="UserVo" parameterType="com.stock.domain.UserVo">
+		SELECT * FROM NOTICES_USER WHERE USER_NAME = #{userNm} AND USER_EMAIL = #{userEmail}
+		<if test='userId != null'>AND USER_ID = #{userId}</if>
+	
 	/* ID , Email 중복체크 */
 	</select>
 
@@ -131,5 +132,20 @@
 		]]>
 		/* 쿠키가 있는지 검색 */
 	</select>
+	
+	<insert id="userCertification" parameterType="com.stock.domain.UserVo">
+		insert into notices_certification(user_id, user_random)
+		values(#{userId},#{certification})
+	</insert>
+	
+	<select id="userMailCertification" resultType="int" parameterType="com.stock.domain.UserVo">
+		select count(*) from notices_Certification
+		where user_id = #{userId} and user_random = #{certification}
+	</select>
+	
+	<delete id="userMailDelete" parameterType="com.stock.domain.UserVo">
+		delete from notices_Certification where user_id = #{userId} and user_random = #{certification}
+	</delete>
+	
 	
 </mapper>

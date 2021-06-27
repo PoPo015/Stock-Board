@@ -286,3 +286,13 @@ values (335, 'test1234')
     
     		SELECT USER_ID,USER_NAME,USER_PHONE,USER_ADDRESS_ZIP_CODE,USER_ADDRESS_ROAD_NAME,USER_ADDRESS_DETAILED,USER_EMAIL 
 		FROM NOTICES_USER WHERE USER_ID = 'test1234' or user_nick = '(naver)포포015'
+        
+ -----인증번호테이블---
+ create table notices_Certification(
+ user_id varchar2(50) not null,
+   number(20),
+ constraints fk_CertificationId foreign key(user_id) references notices_user(user_id)
+ )
+ 
+ 
+        

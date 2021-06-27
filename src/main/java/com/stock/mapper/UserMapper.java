@@ -46,5 +46,12 @@ public interface UserMapper {
 	//쿠키값이 있는 지확인
 	public UserVo checkLoginBefore(String cookieValue);
 	//이름 이메일 체크
-	public int userNameAndEmailCheck(UserVo vo);
+	public UserVo userNameAndEmailCheck(UserVo vo);
+	//유저 인증번호 생성
+	public void userCertification(UserVo vo);
+	//유저 인증번호 있는지
+	public int userMailCertification(UserVo vo);
+	//유저 인증번호 삭제
+	public void userMailDelete(UserVo vo);
+
 }

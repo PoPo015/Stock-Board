@@ -36,8 +36,13 @@ public interface UserService {
 	public void keepLogin(String userId, String sessionId, Date sessionLimit);
 	//쿠키값이 있는 지확인
 	public UserVo checkLoginBefore(String cookieValue);
-	
 	//유저아이디 찾기
 	public String userFindIdPost(UserVo vo) throws Exception;
-
+	//유저아이디 찾기
+	public String userFindPwPost(UserVo vo) throws Exception;
+	
+	public String usermailCertification(UserVo vo);
+	
+	//user 비밀번호 변경
+	public String userFindPwChange(UserVo vo);
 }

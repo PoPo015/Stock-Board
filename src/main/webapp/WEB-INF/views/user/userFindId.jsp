@@ -37,17 +37,15 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
 							<div style="text-align:center">
-								<b>본인확인 이메일 주소와 입력한 이메일 주소가 같아야, 인증번호를 받을 수 있습니다.</b><br>
+<!-- 								<b>본인확인 이메일 주소와 입력한 이메일 주소가 같아야, 인증번호를 받을 수 있습니다.</b><br> -->
+								<b>가입하실때 입력하신 이메일주소와 이름이 동일하면, 작성하신 메일로 아이디를 전송합니다.</b><br>
 								이름:
 								<input type="text" id="userNm"><br>
 								이메일:	
 								<input type="text" id="userEmail">
-								<button type="button" id="idFindBtn">인증번호 받기</button>
-									<!-- 이메일 인증 동적생성 -->
-									<div id="Certification">
-									
-									</div>
-								
+								<span id="Certification">
+									<button type="button" id="idFindBtn">전송</button>
+								</span>
 							</div>
                         </div>
                     </div>
@@ -63,7 +61,7 @@
     <!-- /#wrapper -->
 
 <script>
-	$("#idFindBtn").click(function(){
+$( document ).on("click", "#idFindBtn", function(){
 		console.log("전송 클릭");
 	
 		if($("#userNm").val() === "undefined" || $("#userNm").val() === ""){
@@ -78,6 +76,8 @@
 			return false;			
 		}
 		
+		$("#idFindBtn").remove();
+		
 		$.ajax({
 	        url: "/user/userFindId",
 	        type: "post",
@@ -87,16 +87,13 @@
 	        },
 	        success: function(data) {
 	        	console.log(data)
-	        	
 	        	if(data === "success"){
-					$("#idFindBtn").remove();
-	        		console.log("아이디 찾기 ajax성공");
-					let str = "<input type='text' placeholder='인증번호를 입력하세요' id=''>"
-						str += "<button type='button'>확인</button>"
-		        	
-						$("#Certification").html(str);
+					alert("메일 전송완료. \n 메일을 확인해주세요.");
 	        	}else{
-	        		alert("입력하신 정보와 일치하는 정보가 없습니다 \n 정보를 확인해주세요")
+	        		let str = '<button type="button" id="idFindBtn">전송</button>';
+	        		$("#Certification").html(str);
+	        		
+	        		alert("입력하신 정보와 일치하는 정보가 없습니다. \n 정보를 확인해주세요");
 	        	}
 	        
 	        },
